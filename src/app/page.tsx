@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import Carousel from '@/components/Carousel'
 import ExplainNewsStudy from '@/components/ExplainNewsStudy'
 import ExplainAllKanji from '@/components/ExplainAllKanji'
+import Footer from '@/components/Footer'
 
 const HomePage: React.FC = () => {
 
@@ -43,10 +44,7 @@ const HomePage: React.FC = () => {
         <div className="h-[100vh]">
             <ExplainAllKanji />
         </div>
-
-        {/*  */}
-
-
+        <Footer />
     </main>
   )
 }
