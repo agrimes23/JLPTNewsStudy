@@ -69,7 +69,7 @@ const Navbar = () => {
 
 
     return (
-        <motion.div className="w-full h-[100px] fixed flex flex-col items-center justify-center text-black bg-gray-700 bg-opacity-60 " animate={isOpen ? "open" : "closed"}>
+        <motion.div className="w-full h-[100px] fixed flex flex-col items-center justify-center text-black bg-gray-700 bg-opacity-60 z-10" animate={isOpen ? "open" : "closed"}>
           <motion.div className={`fixed top-0 left-0 right-0 bottom-0 w-[300px] z-50 bg-white shadow-2xl`}  variants={variants}>
             {/* Links */}
             <motion.div className="absolute w-full h-full flex flex-col items-center justify-center gap-[20px] text-purple-400" variants={linkVariants}>
