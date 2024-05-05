@@ -3,46 +3,46 @@ import Navbar from '@/components/Navbar'
 import React, {useState} from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import Carousel from '@/components/Carousel'
-
+import ExplainNewsStudy from '@/components/ExplainNewsStudy'
+import ExplainAllKanji from '@/components/ExplainAllKanji'
 
 const HomePage: React.FC = () => {
 
-    const imageSourceArray = [
-        "https://images.pexels.com/photos/6249543/pexels-photo-6249543.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-        "https://images.pexels.com/photos/590478/pexels-photo-590478.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-        "https://images.pexels.com/photos/19658331/pexels-photo-19658331/free-photo-of-red-paper-lanterns-in-tokyo-japan.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-        "https://images.pexels.com/photos/406153/pexels-photo-406153.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-        "https://images.pexels.com/photos/6249464/pexels-photo-6249464.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-    ]
-
 
   return (
-    <main>
+    <main className="flex flex-col min-w-screen min-h-screen">
         <Navbar />
 
         {/* Hero section */}
-        <div className="flex  pb-20 min-w-screen bg-[#1d150d]">
-            <div className="flex mx-auto h-screen min-w-screen max-w-[1200px]">
-                <Carousel imageUrls={imageSourceArray}/>
+        <div className="relative flex min-w-screen h-full">
+            <div className="flex h-screen min-w-screen overflow-hidden">
+                <img src="https://images.pexels.com/photos/6249464/pexels-photo-6249464.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="" className="object-cover w-screen h-[96vh]"/>
             </div>
-            <div>
-                <h2>
-
+            <div className="absolute w-[500px]  bg-black rounded-2xl bg-opacity-60 right-[8%] top-[35%] p-20">
+                <h2 className="text-white text-[40px] text-center">
+                    Learn how to read kanji from Japanese news
                 </h2>
+                <h3 className="text-white text-[25px] text-center mt-5">
+                    <h3>日本のニューズで</h3>
+                    <h3>漢字の読む方を学ぶ</h3>
+                </h3>
+                <div className="mt-10 flex w-[100%] justify-center">
+                    <button className="flex px-10 py-4 bg-yellow-500 rounded-lg">
+                        Get Started {"->"}
+                    </button>
+                </div>
             </div>
         </div>
 
-        {/* Practice Carousel */}
-
-
-
         {/* What news they can study */}
-        <div className="h-[900px]">
-
+        <div className="h-[100vh]">
+            <ExplainNewsStudy />
         </div>
 
         {/* Detects all levels of jlpt kanji */}
-
+        <div className="h-[100vh]">
+            <ExplainAllKanji />
+        </div>
 
         {/*  */}
 
