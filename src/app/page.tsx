@@ -23,8 +23,8 @@ const HomePage: React.FC = () => {
                     Learn how to read kanji from Japanese news
                 </h2>
                 <h3 className="text-white text-[25px] text-center mt-5">
-                    <h3>日本のニューズで</h3>
-                    <h3>漢字の読む方を学ぶ</h3>
+                    <p>日本のニューズで</p>
+                    <p>漢字の読む方を学ぶ</p>
                 </h3>
                 <div className="mt-10 flex w-[100%] justify-center">
                     <button className="flex px-10 py-4 bg-yellow-500 rounded-lg">
