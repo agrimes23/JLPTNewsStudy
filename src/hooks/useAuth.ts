@@ -2,6 +2,8 @@ import React from 'react'
 
 import { useState } from 'react';
 
+// FIXME: need to test
+
 export const useAuth = () => {
   const [user, setUser] = useState(null);
 
