@@ -1,5 +1,6 @@
+"use client"
 import React, { useState } from 'react';
-import { useRouter } from 'next/router';
+// import { useRouter } from 'next/router';
 
 const initialInputValue = {
     name: "",
@@ -17,7 +18,7 @@ const Signup: React.FC = () => {
     //       console.error("GraphQL error:", error);
     //     },
     // });
-    const router = useRouter()
+    // const router = useRouter()
     const [inputValue, setInputValue] = useState({
         name: "",
         email: "",
@@ -40,7 +41,7 @@ const Signup: React.FC = () => {
         try {
             // const { data } = await registerUser({ variables: { input: inputValue } });
             setInputValue(initialInputValue)
-            router.push('/')
+            // router.push('/')
         } catch (error) {
             console.log("Registration error: " + error)
         }

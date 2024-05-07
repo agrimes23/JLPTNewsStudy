@@ -1,7 +1,9 @@
 "use client"
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import { useRouter } from "next/router";
+import { useAuth } from "../../context/AuthContext"
+
 
 const initialInputValue = {
   email: "",
@@ -9,22 +11,28 @@ const initialInputValue = {
 };
 
 const Login: React.FC = () => {
-  // const [loginUser] = useMutation(LOGIN_USER, {
-  //   errorPolicy: "all",
-  //   onCompleted: (res: any) => {
-  //     console.log("login res: ", res);
-  //   },
-  //   onError: (error: any) => {
-  //     console.error("GraphQL error:", error);
-  //   },
-  // });
-
-  // const router = useRouter();
 
   const [inputValue, setInputValue] = useState({
     email: "",
     password: "",
   });
+
+
+  const { login } = useAuth()
+
+  useEffect(() => {
+    // Automatically trigger the login process when the component mounts
+    const autoLogin = async () => {
+      try {
+        // Call the login function with test credentials
+        await login('yreyes@email.com', 'Password1!');
+      } catch (error) {
+        console.error('Automatic login failed:', error);
+      }
+    };
+
+    autoLogin(); // Invoke the autoLogin function
+  }, []);
 
   const { email, password } = inputValue;
 
