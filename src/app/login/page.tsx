@@ -1,9 +1,9 @@
 "use client"
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
+import axios from "axios";
+import { login } from '../../api/authentication'
 import Navbar from "@/components/Navbar";
-import { useRouter } from "next/router";
-import { useAuth } from "../../context/AuthContext"
-
+import Cookies from 'js-cookie'
 
 const initialInputValue = {
   email: "",
@@ -11,32 +11,11 @@ const initialInputValue = {
 };
 
 const Login: React.FC = () => {
-
-  const [inputValue, setInputValue] = useState({
-    email: "",
-    password: "",
-  });
-
-
-  const { login } = useAuth()
-
-  useEffect(() => {
-    // Automatically trigger the login process when the component mounts
-    const autoLogin = async () => {
-      try {
-        // Call the login function with test credentials
-        await login('yreyes@email.com', 'Password1!');
-      } catch (error) {
-        console.error('Automatic login failed:', error);
-      }
-    };
-
-    autoLogin(); // Invoke the autoLogin function
-  }, []);
+  const [inputValue, setInputValue] = useState(initialInputValue);
 
   const { email, password } = inputValue;
 
-  const handleOnChange = (e: any) => {
+  const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setInputValue({
       ...inputValue,
@@ -44,61 +23,54 @@ const Login: React.FC = () => {
     });
   };
 
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("oo submitted: email: ", email + ", Password: " + password);
-    try {
-      // const { data } = await loginUser({ variables: { input: inputValue } });
-      setInputValue(initialInputValue);
-      // router.push("/");
-    } catch (error) {
-      console.log("Login error: " + error);
-    }
+    console.log("Submitted: email: ", email + ", Password: " + password);
+    login(email, password)
+      .then((data: any) => {
+        // Handle successful login
+        console.log(`Login successful: ${JSON.stringify(data)}`);
+        Cookies.set('jwtToken', data.token, { expires: 7 });
+        setInputValue(initialInputValue);
+        localStorage.setItem('userData', JSON.stringify(data))
+        
+        // Redirect or perform any other actions after successful login
+      })
+      .catch((error: Error) => {
+        // Handle login error
+        console.log("Login error oops: ", error.message);
+      });
   };
 
   return (
-    <div className="flex flex-col min-h-screen min-w-screen items-center">
+    <div className="flex flex-col h-screen w-screen items-center ">
       <Navbar />
-      <div className="flex items-center h-screen w-full justify-center">
-        <div className="bg-purple-200 pt-16 pb-20 w-4/12 rounded border border-purple-600">
-            <h2 className="text-4xl font-semibold mb-16 text-center">Login to JLPT News Study</h2>
-          <form onSubmit={handleSubmit}>
-            <div className="m-7 flex justify-center items-center ">
-              <input
-                className="p-3 w-8/12 rounded border border-purple-600"
-                type="email"
-                name="email"
-                value={email}
-                placeholder="Please enter your email"
-                onChange={handleOnChange}
-              />
-            </div>
+        <h2 className="text-center pt-24 h-2/12">Login</h2>
 
-            <div className="m-7 flex justify-center items-center ">
-              <input
-                className="p-3 w-8/12 rounded border border-purple-600"
-                type="password"
-                name="password"
-                value={password}
-                placeholder="Please enter your password"
-                onChange={handleOnChange}
-              />
-            </div>
-            <div className="flex justify-center mt-16 mx-7">
-                <button className="p-3 w-8/12 rounded bg-blue-700 text-white font-semibold text-lg " type="submit">
-                Login
-                </button>
-            </div>
-            <br />
-            <br />
-            <div className="text-center font-input text-lightGray">
-              New to our app?{" "}
-              <a className="underline" href="/signup">
-                Register
-              </a>
-            </div>
-          </form>
-        </div>
+
+      <div className="flex flex-col mt-44 items-center h-full w-full">
+        <form className="flex h-2/5 flex-col items-center justify-center bg-gray-300 w-80 gap-10 rounded border-[2px] border-black" onSubmit={handleSubmit}>
+          <input
+            className="py-2 pl-2 rounded"
+            type="email"
+            name="email"
+            value={email}
+            onChange={handleOnChange}
+            placeholder="Email"
+          />
+          <input
+            className="py-2 pl-2 rounded"
+            type="password"
+            name="password"
+            value={password}
+            onChange={handleOnChange}
+            placeholder="Password"
+          />
+          <button className="flex justfy-center items-center bg-purple-400 w-[230px] justify-center py-2 rounded" type="submit">Login</button>
+          <div className="text-center font-input text-lightGray">
+                New to our app? <a className="underline" href="/login">Login</a>
+          </div>
+        </form>
       </div>
     </div>
   );

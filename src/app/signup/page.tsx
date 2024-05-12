@@ -1,31 +1,25 @@
 "use client"
 import React, { useState } from 'react';
 // import { useRouter } from 'next/router';
+import { register } from '@/api/authentication';
+import Navbar from '@/components/Navbar';
 
 const initialInputValue = {
-    name: "",
+    firstName: "",
+    lastName: "",
     email: "",
     password: "",
   };
 
 const Signup: React.FC = () => {
-    // const [registerUser] = useMutation(REGISTER_USER, {
-    //     errorPolicy: "all",
-    //     onCompleted: (res: any) => {   
-    //       console.log("registration res: ", res)
-    //     },
-    //     onError: (error: any) => {
-    //       console.error("GraphQL error:", error);
-    //     },
-    // });
-    // const router = useRouter()
     const [inputValue, setInputValue] = useState({
-        name: "",
+        firstName: "",
+        lastName: "",
         email: "",
         password: "",
         });
 
-    const { name, email, password } = inputValue;
+    const { firstName, lastName, email, password } = inputValue;
 
     const handleOnChange = (e: any) => {
         const { name, value } = e.target;
@@ -39,9 +33,13 @@ const Signup: React.FC = () => {
         e.preventDefault();
         console.log("oo submitted: email: ", email + ", Password: " + password)
         try {
-            // const { data } = await registerUser({ variables: { input: inputValue } });
+
+            register(inputValue.firstName, inputValue.lastName, inputValue.email, inputValue.password)
+            .then(responseData => {
+                setInputValue(initialInputValue);
+            })
             setInputValue(initialInputValue)
-            // router.push('/')
+
         } catch (error) {
             console.log("Registration error: " + error)
         }
@@ -50,7 +48,7 @@ const Signup: React.FC = () => {
     return (
         
         <div className="flex flex-col min-h-screen min-w-screen items-center">
-            {/* <Navbar/> */}
+            <Navbar/>
             <div className="flex items-center h-screen">
 
             <form onSubmit={handleSubmit}>
@@ -58,9 +56,16 @@ const Signup: React.FC = () => {
 
                     <input className=""
                         type="name"
-                        name="name"
-                        value={name}
-                        placeholder="Please enter your name"
+                        name="firstName"
+                        value={firstName}
+                        placeholder="Please enter your first name"
+                        onChange={handleOnChange}
+                    />
+                    <input className=""
+                        type="name"
+                        name="lastName"
+                        value={lastName}
+                        placeholder="Please enter your last name"
                         onChange={handleOnChange}
                     />
                     <input className=""
@@ -69,7 +74,10 @@ const Signup: React.FC = () => {
                         value={email}
                         placeholder="Please enter your email"
                         onChange={handleOnChange}
+                        required
                     />
+                    {/* for email error */}
+                    <div className=""></div>
 
                     <input className=""
                         type="password"
@@ -77,11 +85,14 @@ const Signup: React.FC = () => {
                         value={password}
                         placeholder="Please enter your password"
                         onChange={handleOnChange}
+                        required
                     />
+                    {/* for password error */}
+                    <div className=""></div>
                 </div>
                 <button className="" type="submit">Sign Up</button><br /><br />
                 <div className="text-center font-input text-lightGray">
-                New to our app? <a className="underline" href="/login">Login</a>
+                Already have an account? <a className="underline" href="/login">Login</a>
                 </div>
             </form>
             </div>

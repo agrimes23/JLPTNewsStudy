@@ -1,8 +1,54 @@
 "use client"
-import React from 'react'
-import Navbar from '@/components/Navbar'
+import React, { useEffect, useState } from 'react'
+// import Navbar from '@/components/Navbar'
+import { getUserDecks } from '@/api/flashcardApi'
+import Cookies from 'js-cookie';
+
+interface UserData {
+    user: string
+}
 
 const Dashboard: React.FC = () => {
+    const [userDecks, setUserDecks] = useState([]);
+    
+    useEffect(() => {
+        const token = Cookies.get('jwtToken');
+    
+        // Check if token exists
+        if (!token) {
+            console.error('Token not found');
+            return; // Exit early if token is missing
+        }
+    
+        // Retrieve user data from local storage
+        const userDataId = localStorage.getItem('userData');
+
+
+        // Check if user data exists
+        if (!userDataId) {
+            console.error('User data not found');
+            return; // Exit early if user data is missing
+        }
+    
+        // Parse user data string into a UserData object
+        const userData: UserData = JSON.parse(userDataId);
+    
+        // Now you can use userData.user as a string
+        console.log("userData: " + JSON.stringify(userData.user));
+    
+        // Make API call using user data and token
+        getUserDecks(userData.user, token)
+            .then((response: any) => {
+                console.log("response: " + JSON.stringify(response));
+                setUserDecks(response)
+            })
+            .catch((error: any) => {
+                console.error("Error fetching user decks:", error);
+            });
+    }, []);
+
+
+
   return (
     <div className="flex flex-col min-w-screen min-h-screen items-center">
         {/* Navbar on dash page */}
@@ -19,94 +65,31 @@ const Dashboard: React.FC = () => {
         {/* list of available decks */}
         <div className="flex flex-col w-[100%] h-[100%] items-center gap-14">
             {/* One deck and info */}
-            <div className="flex w-[600px] py-8 border-[1px] rounded-lg border-gray-500 justify-between px-8 shadow-lg">
-                <div className="flex flex-col gap-6 self-end">
-                    <h3 className="text-[22px]">Deck Title</h3>
-                    <p>deck description</p>
-                </div>
-                <div className="flex flex-col gap-6 self-end">
-                    <p>-------jlpt kanji level bar-------</p>
-                    <p className="self-end">modified date</p>
-                </div>
-                <div className="flex flex-col gap-6 self-end">
-                    <p className="text-red-600 self-end">delete</p>
-                    <p className="text-blue-600 self-end">edit</p>
-                </div>
-            </div>
 
-            {/* Duplicates just for current visual. need to put above code in separate component */}
-            {/* delete the below divs later */}
-            <div className="flex w-[600px] py-8 border-[1px] rounded-lg border-gray-500 justify-between px-8 shadow-lg">
-                <div className="flex flex-col gap-6 self-end">
-                    <h3 className="text-[22px]">Deck Title</h3>
-                    <p>deck description</p>
-                </div>
-                <div className="flex flex-col gap-6 self-end">
-                    <p>-------jlpt kanji level bar-------</p>
-                    <p className="self-end">modified date</p>
-                </div>
-                <div className="flex flex-col gap-6 self-end">
-                    <p className="text-red-600 self-end">delete</p>
-                    <p className="text-blue-600 self-end">edit</p>
-                </div>
-            </div>
-            <div className="flex w-[600px] py-8 border-[1px] rounded-lg border-gray-500 justify-between px-8 shadow-lg">
-                <div className="flex flex-col gap-6 self-end">
-                    <h3 className="text-[22px]">Deck Title</h3>
-                    <p>deck description</p>
-                </div>
-                <div className="flex flex-col gap-6 self-end">
-                    <p>-------jlpt kanji level bar-------</p>
-                    <p className="self-end">modified date</p>
-                </div>
-                <div className="flex flex-col gap-6 self-end">
-                    <p className="text-red-600 self-end">delete</p>
-                    <p className="text-blue-600 self-end">edit</p>
-                </div>
-            </div>
-            <div className="flex w-[600px] py-8 border-[1px] rounded-lg border-gray-500 justify-between px-8 shadow-lg">
-                <div className="flex flex-col gap-6 self-end">
-                    <h3 className="text-[22px]">Deck Title</h3>
-                    <p>deck description</p>
-                </div>
-                <div className="flex flex-col gap-6 self-end">
-                    <p>-------jlpt kanji level bar-------</p>
-                    <p className="self-end">modified date</p>
-                </div>
-                <div className="flex flex-col gap-6 self-end">
-                    <p className="text-red-600 self-end">delete</p>
-                    <p className="text-blue-600 self-end">edit</p>
-                </div>
-            </div>
-            <div className="flex w-[600px] py-8 border-[1px] rounded-lg border-gray-500 justify-between px-8 shadow-lg">
-                <div className="flex flex-col gap-6 self-end">
-                    <h3 className="text-[22px]">Deck Title</h3>
-                    <p>deck description</p>
-                </div>
-                <div className="flex flex-col gap-6 self-end">
-                    <p>-------jlpt kanji level bar-------</p>
-                    <p className="self-end">modified date</p>
-                </div>
-                <div className="flex flex-col gap-6 self-end">
-                    <p className="text-red-600 self-end">delete</p>
-                    <p className="text-blue-600 self-end">edit</p>
-                </div>
-            </div>
-            <div className="flex w-[600px] py-8 border-[1px] rounded-lg border-gray-500 justify-between px-8 shadow-lg">
-                <div className="flex flex-col gap-6 self-end">
-                    <h3 className="text-[22px]">Deck Title</h3>
-                    <p>deck description</p>
-                </div>
-                <div className="flex flex-col gap-6 self-end">
-                    <p>-------jlpt kanji level bar-------</p>
-                    <p className="self-end">modified date</p>
-                </div>
-                <div className="flex flex-col gap-6 self-end">
-                    <p className="text-red-600 self-end">delete</p>
-                    <p className="text-blue-600 self-end">edit</p>
-                </div>
-            </div>
+            {userDecks.map((deckInfo: any, index: number) => {
+                return (
+                    <div key={index} className="flex w-[600px] py-8 border-[1px] rounded-lg border-gray-500 justify-between px-8 shadow-lg">
+                        <div className="flex flex-col gap-6 self-end">
+                            <h3 className="text-[22px]">{deckInfo.title}</h3>
+                            <p>{deckInfo.description}</p>
+                        </div>
+                        <div className="flex flex-col gap-6 self-end">
+                            <p>-------jlpt kanji level bar-------</p>
+                            <p className="self-end">{deckInfo.modifiedDate}</p>
+                        </div>
+                        <div className="flex flex-col gap-6 self-end">
+                            <p className="text-red-600 self-end">delete</p>
+                            <p className="text-blue-600 self-end">edit</p>
+                        </div>
+                    </div>
+                )
+            })
 
+            }
+
+            
+
+            
 
         </div>
     </div>

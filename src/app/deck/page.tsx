@@ -1,9 +1,16 @@
 "use client"
-import React from 'react'
+import React, { useEffect } from 'react'
+import { getUserDecks } from '@/api/flashcardApi'
+
 
 // TODO: this is where user can create new flashcards, delete a flashcard, and edit flashcards (in edit mode)
 
 const Deck = () => {
+
+
+
+
+
   return (
     <>
         {/* page container */}
