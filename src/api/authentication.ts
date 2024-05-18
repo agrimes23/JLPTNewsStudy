@@ -8,20 +8,13 @@ type RegisterFunction = (firstName: string, lastName: string, email: string, pas
 export const login: LoginFunction = async (email, password) => {
     const response = await axios.post('http://localhost:8080/auth/login', { email, password }, { withCredentials: true })
 
-    console.log(`response.data: ${JSON.stringify(response.data)}`)
+    console.log(`response.data: ${JSON.stringify(response)}`)
+    console.log(`response.headers: ${JSON.stringify(response.headers)}`)
     return response.data;
-
-
 };
 
 export const register: RegisterFunction = async (firstName, lastName, email, password) => {
     try {
-        const userInfo = {
-            firstName,
-            lastName,
-            email,
-            password
-        }
         const response = await axios.post('http://localhost:8080/auth/register', { firstName, lastName, email, password },  { withCredentials: true })
     
         return response.data;

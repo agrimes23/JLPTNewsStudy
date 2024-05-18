@@ -1,9 +1,8 @@
 "use client"
 import React, { useState } from "react";
-import axios from "axios";
-import { login } from '../../api/authentication'
+import { useAuth } from "@/context/AuthContext";
 import Navbar from "@/components/Navbar";
-import Cookies from 'js-cookie'
+import { useRouter } from "next/navigation";
 
 const initialInputValue = {
   email: "",
@@ -12,8 +11,9 @@ const initialInputValue = {
 
 const Login: React.FC = () => {
   const [inputValue, setInputValue] = useState(initialInputValue);
-
+  const router = useRouter()
   const { email, password } = inputValue;
+  const { login } = useAuth();
 
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -22,24 +22,20 @@ const Login: React.FC = () => {
       [name]: value,
     });
   };
+  
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log("Submitted: email: ", email + ", Password: " + password);
-    login(email, password)
-      .then((data: any) => {
-        // Handle successful login
-        console.log(`Login successful: ${JSON.stringify(data)}`);
-        Cookies.set('jwtToken', data.token, { expires: 7 });
-        setInputValue(initialInputValue);
-        localStorage.setItem('userData', JSON.stringify(data))
-        
-        // Redirect or perform any other actions after successful login
-      })
-      .catch((error: Error) => {
-        // Handle login error
-        console.log("Login error oops: ", error.message);
-      });
+    try {
+      const data = await login(email, password);
+      // Handle successful login
+      setInputValue(initialInputValue);
+      router.push('/dashboard');
+    } catch (error: any) {
+      // Handle login error
+      console.log("Login error oops: ", error.message);
+    }
   };
 
   return (

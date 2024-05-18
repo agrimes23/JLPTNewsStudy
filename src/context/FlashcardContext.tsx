@@ -1,51 +1,129 @@
 "use client"
+import React, { createContext, useContext, useState, ReactNode } from 'react';
+import { getDeckData } from '@/api/flashcardApi'; // Import the getDeckData function
 
-import React, { createContext, useContext } from 'react';
-import axios from 'axios';
-import { useAuth } from './AuthContext';
-
-type Flashcard = {
+// Define the shape of deck and flashcard data
+interface Flashcard {
   id: string;
-  // Define flashcard properties
-};
+  question: string;
+  answer: string;
+}
 
-type FlashcardsContextType = {
+interface Deck {
+  id: string;
+  name: string;
+  description: string;
   flashcards: Flashcard[];
-  addFlashcard: (deckId: string, flashcard: Flashcard) => Promise<void>;
-  removeFlashcard: (deckId: string, flashcardId: string) => Promise<void>;
-  updateFlashcard: (deckId: string, flashcardId: string, updatedFlashcard: Partial<Flashcard>) => Promise<void>;
-};
+}
 
-const FlashcardsContext = createContext<FlashcardsContextType | undefined>(undefined);
+interface DeckData {
+  title: string;
+  description: string;
+  modifiedDate: string;
+}
 
-export const FlashcardsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { isAuthenticated } = useAuth();
+interface FlashcardDeckContextType {
+  decks: Deck[];
+  createDeck: (deck: Deck) => void;
+  editDeck: (deckId: string, updatedDeck: Partial<Deck>) => void;
+  deleteDeck: (deckId: string) => void;
+  createFlashcard: (deckId: string, flashcard: Flashcard) => void;
+  editFlashcard: (deckId: string, flashcardId: string, updatedFlashcard: Partial<Flashcard>) => void;
+  deleteFlashcard: (deckId: string, flashcardId: string) => void;
+  getDeck: (deckId: string) => Deck | undefined;
+  getFlashcard: (deckId: string, flashcardId: string) => Flashcard | undefined;
+}
 
-  const addFlashcard = async (deckId: string, flashcard: Flashcard) => {
-    // Implement adding flashcard to the deck
+// Create the context with a default value
+const FlashcardDeckContext = createContext<FlashcardDeckContextType | undefined>(undefined);
+
+// Define the provider component
+const FlashcardDeckProvider = ({ children }: { children: ReactNode }) => {
+  const [decks, setDecks] = useState<Deck[]>([]);
+
+  const createDeck = (deck: Deck) => {
+    setDecks(prevDecks => [...prevDecks, deck]);
   };
 
-  const removeFlashcard = async (deckId: string, flashcardId: string) => {
-    // Implement removing flashcard from the deck
+  const editDeck = (deckId: string, updatedDeck: Partial<Deck>) => {
+    setDecks(prevDecks =>
+      prevDecks.map(deck => (deck.id === deckId ? { ...deck, ...updatedDeck } : deck))
+    );
   };
 
-  const updateFlashcard = async (deckId: string, flashcardId: string, updatedFlashcard: Partial<Flashcard>) => {
-    // Implement updating flashcard in the deck
+  const deleteDeck = (deckId: string) => {
+    setDecks(prevDecks => prevDecks.filter(deck => deck.id !== deckId));
   };
 
-  // Include other functions for managing flashcards
+  const createFlashcard = (deckId: string, flashcard: Flashcard) => {
+    setDecks(prevDecks =>
+      prevDecks.map(deck =>
+        deck.id === deckId ? { ...deck, flashcards: [...deck.flashcards, flashcard] } : deck
+      )
+    );
+  };
+
+  const editFlashcard = (deckId: string, flashcardId: string, updatedFlashcard: Partial<Flashcard>) => {
+    setDecks(prevDecks =>
+      prevDecks.map(deck =>
+        deck.id === deckId
+          ? {
+              ...deck,
+              flashcards: deck.flashcards.map(flashcard =>
+                flashcard.id === flashcardId ? { ...flashcard, ...updatedFlashcard } : flashcard
+              )
+            }
+          : deck
+      )
+    );
+  };
+
+  const deleteFlashcard = (deckId: string, flashcardId: string) => {
+    setDecks(prevDecks =>
+      prevDecks.map(deck =>
+        deck.id === deckId
+          ? { ...deck, flashcards: deck.flashcards.filter(flashcard => flashcard.id !== flashcardId) }
+          : deck
+      )
+    );
+  };
+
+  const getDeck = (deckId: string): Deck | undefined => {
+    return decks.find(deck => deck.id === deckId);
+  };
+
+  const getFlashcard = (deckId: string, flashcardId: string): Flashcard | undefined => {
+    const deck = getDeck(deckId);
+    return deck?.flashcards.find(flashcard => flashcard.id === flashcardId);
+  };
+
 
   return (
-    <FlashcardsContext.Provider value={{ flashcards: [], addFlashcard, removeFlashcard, updateFlashcard }}>
+    <FlashcardDeckContext.Provider
+      value={{
+        decks,
+        createDeck,
+        editDeck,
+        deleteDeck,
+        createFlashcard,
+        editFlashcard,
+        deleteFlashcard,
+        getDeck,
+        getFlashcard
+      }}
+    >
       {children}
-    </FlashcardsContext.Provider>
+    </FlashcardDeckContext.Provider>
   );
 };
 
-export const useFlashcards = () => {
-  const context = useContext(FlashcardsContext);
-  if (!context) {
-    throw new Error('useFlashcards must be used within a FlashcardsProvider');
+// Hook to use the FlashcardDeckContext
+const useFlashcardDeck = (): FlashcardDeckContextType => {
+  const context = useContext(FlashcardDeckContext);
+  if (context === undefined) {
+    throw new Error('useFlashcardDeck must be used within a FlashcardDeckProvider');
   }
   return context;
 };
+
+export { FlashcardDeckProvider, useFlashcardDeck };

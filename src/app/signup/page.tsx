@@ -1,6 +1,6 @@
 "use client"
 import React, { useState } from 'react';
-// import { useRouter } from 'next/router';
+// import { useRouter } from 'next/navigation';
 import { register } from '@/api/authentication';
 import Navbar from '@/components/Navbar';
 

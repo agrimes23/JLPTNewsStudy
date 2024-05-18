@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/context/AuthContext";
+import { UserProvider } from "@/context/UserContext";
+import { FlashcardDeckProvider } from "@/context/FlashcardContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,7 +22,11 @@ export default function RootLayout({
       
       <body className={inter.className}>
       <AuthProvider>
+        <UserProvider>
+          <FlashcardDeckProvider>
         {children}
+        </FlashcardDeckProvider>
+        </UserProvider>
       </AuthProvider>
       </body>
     </html>

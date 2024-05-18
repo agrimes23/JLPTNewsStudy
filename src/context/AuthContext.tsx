@@ -1,71 +1,87 @@
 "use client"
-import { createContext, useState, useContext, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, ReactNode } from 'react';
 import axios from 'axios';
-// import Router from 'next/router';
 
-type LoginFunction = (email: string, password: string) => Promise<void>;
+// Define the shape of the user data and context state
+interface User {
+  id: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+}
 
-// Define the AuthContextType
-type AuthContextType = {
-  isAuthenticated: boolean;
-  login: LoginFunction;
+interface AuthContextType {
+  user: User | null;
+  accessToken: string | null;
+  login: (email: string, password: string) => Promise<void>;
   logout: () => void;
-  checkAuth: () => void;
-};
+  register: (firstName: string, lastName: string, email: string, password: string) => Promise<void>;
+  refreshAccessToken: () => Promise<void>;
+}
 
+// Create the context with a default value
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+// Define the provider component
+const AuthProvider = ({ children }: { children: ReactNode }) => {
+  const [user, setUser] = useState<User | null>(null);
+  const [accessToken, setAccessToken] = useState<string | null>(null);
 
-  const login: LoginFunction = async (email, password) => {
-    console.log("helloooo login in auth context")
+  const login = async (email: string, password: string) => {
+ 
     try {
-      const response = await axios.post('http://localhost:8080/auth/login', { email, password });
-      console.log(response.data.authentication.sessionToken)
-      if (response.status === 200) {
-        localStorage.setItem('sessionToken', response.data.authentication.sessionToken);
-        setIsAuthenticated(true);
-        console.log("yay the response was 200")
-        // Router.push('/dashboard');
-      } else {
-        console.log("oof did not get sc 200 for login :(")
-      }
+      // Send login request to the server
+      const response = await axios.post('http://localhost:8080/auth/login', { email, password }, { withCredentials: true });
+  
+      // Extract accessToken from the response
+      const { accessToken, user } = response.data;
+  
+      // Set the accessToken in the context state
+      setAccessToken(accessToken);
+  
+      // Optionally, set the user information in the context state
+      setUser(user);
     } catch (error) {
-      console.error('Login failed:', error);
+      // Handle login error
+      console.error('Login error:', error);
+      // Optionally, you can handle login error and display appropriate messages to the user
     }
   };
 
   const logout = () => {
-    // perform logout logic, set isAuthenticated to false
-    setIsAuthenticated(false);
+    setUser(null);
+    setAccessToken(null);
+    // Optionally, you can also clear the refresh token cookie by making an API call to the logout endpoint.
+    axios.post('http://localhost:8080/auth/logout', {}, { withCredentials: true });
   };
 
-  const checkAuth = () => {
-
-    const sessionToken = localStorage.getItem('sessionToken');
-    setIsAuthenticated(!!sessionToken);
+  const register = async (firstName: string, lastName: string, email: string, password: string) => {
+    const response = await axios.post('http://localhost:8080/auth/register', { firstName, lastName, email, password }, { withCredentials: true });
+    const { accessToken, user } = response.data;
+    setAccessToken(accessToken);
+    setUser(user);
   };
 
-  // Run checkAuth when component mounts to initialize authentication state
-  useEffect(() => {
-    console.log(localStorage);
-    
-    checkAuth();
-  }, []);
+  const refreshAccessToken = async () => {
+    const response = await axios.post('http://localhost:8080/auth/refresh', {}, { withCredentials: true });
+    const { accessToken } = response.data;
+    setAccessToken(accessToken);
+  };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout, checkAuth }}>
+    <AuthContext.Provider value={{ user, accessToken, login, logout, register, refreshAccessToken }}>
       {children}
     </AuthContext.Provider>
   );
 };
 
-// Custom hook to consume the AuthContext
-export const useAuth = () => {
+// Hook to use the AuthContext
+const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);
-  if (!context) {
+  if (context === undefined) {
     throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
 };
+
+export { AuthProvider, useAuth };

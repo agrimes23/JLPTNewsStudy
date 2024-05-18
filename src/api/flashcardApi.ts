@@ -1,14 +1,37 @@
 // flashcard http routes
 import axios from 'axios'
 
+interface DeckData {
+    title: string;
+    description: string;
+    modifiedDate: string;
+}
 
 
-
-
-export const getUserDecks: any = async (id: string, token: string) => {
-    const response = await axios.get(`http://localhost:8080/deck/user/${id}`, { withCredentials: true },)
-    localStorage.setItem('userDecks', JSON.stringify(response))
-    console.log(`response.data: ${JSON.stringify(response.data)}`)
+export const getUserDecks = async (id: string, token: string) => {
+    const response = await axios.get(`http://localhost:8080/deck/user/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      withCredentials: true,
+    });
+  
+    localStorage.setItem('userDecks', JSON.stringify(response.data));
+    console.log(`response.data: ${JSON.stringify(response.data)}`);
     return response.data;
+  };
 
+
+
+  
+// Function to fetch deck data from backend
+export const getDeckData = async (deckId: string): Promise<DeckData> => {
+  try {
+    const response = await axios.get(`http://localhost:8080/api/decks/${deckId}`);
+    return response.data;
+  } catch (error) {
+    // Handle error
+    console.error("Error fetching deck data:", error);
+    throw error; // Rethrow the error to handle it in the component or context
+  }
 };
