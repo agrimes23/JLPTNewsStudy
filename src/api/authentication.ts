@@ -22,7 +22,7 @@ export const register: RegisterFunction = async (firstName, lastName, email, pas
     
         return response.data;
     } catch (error) {
-        console.log("Register function error message: " + JSON.stringify(error))
+        console.error("Register function error message: " + JSON.stringify(error))
     }
     
 

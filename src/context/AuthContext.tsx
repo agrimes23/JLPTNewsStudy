@@ -43,8 +43,10 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
       setAccessToken(accessToken);
 
       // Proceed with fetching user information
-      const userRes: any = await getUserInfo(accessToken);
-      setUser(userRes)
+      if (accessToken) {
+        const userRes: any = await getUserInfo(accessToken);
+        setUser(userRes)
+      }
     } catch (error) {
       console.error('Error refreshing access token:', error);
       // Handle error (e.g., redirect to login page)
@@ -77,7 +79,6 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
       const response = await axios.post('http://localhost:8080/auth/login', { email, password }, { withCredentials: true });
   
       const { accessToken, user } = response.data;
-      localStorage.setItem("user", JSON.stringify(user))
       setAccessToken(accessToken);
       setUser(user);
     } catch (error) {

@@ -22,7 +22,7 @@ interface UserData {
 }
 
 const Dashboard: React.FC = () => {
-    const { accessToken, user } = useAuth()
+    const { accessToken, user, checkAndRefreshAccessToken } = useAuth()
     const { getUser, userInfo } = useUser()
     const [userDecks, setUserDecks] = useState<DeckInfo[]>([]);
     const [userData, setUserData] = useState<UserData | null>(null);
@@ -30,17 +30,13 @@ const Dashboard: React.FC = () => {
 
     const fetchData = async () => {
         try {
-            const userJSON:any = localStorage.getItem('user')
-
-            const userLs = JSON.parse(userJSON)
             
-          getUser();
-          console.log("this is user ifno: " + JSON.stringify(userInfo))
+          await getUser();
+          if (userInfo){ 
 
-          const decks = await getUserDecks(userLs.id);
-          console.log("decks: " + JSON.stringify(decks))
-          
-          // Iterate over each deck and fetch deck data
+            const decks = await getUserDecks(userInfo._id, accessToken);
+            console.log("decks: " + JSON.stringify(decks))
+                      // Iterate over each deck and fetch deck data
           const decksWithData = await Promise.all(decks.map(async (deck: any) => {
             try {
               const deckData = await getDeckData(deck._id, accessToken);
@@ -52,6 +48,8 @@ const Dashboard: React.FC = () => {
           }));
   
           setUserDecks(decksWithData);
+        }   
+
         } catch (error) {
           console.error("Error fetching user data:", error);
         }

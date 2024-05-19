@@ -6,7 +6,7 @@ import { getUserInfo } from '@/api/userApi';
 
 // Define types for user information
 type UserInfo = {
-  id: string;
+  _id: string;
   email: string;
   firstName: string;
   lastName: string;
@@ -32,8 +32,10 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const getUser = async () => {
     
     try {
-      const response: any = await getUserInfo(accessToken);
-      setUserInfo(response);
+      if(accessToken){
+        const response: any = await getUserInfo(accessToken);
+        setUserInfo(response);
+      }
     } catch (error) {
       console.error('Failed to fetch user info:', error);
     }
@@ -48,14 +50,15 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const updateUser = async (updatedInfo: Partial<UserInfo>) => {
     try {
-      const userJson:any = localStorage.getItem('user')
-      const userParse = JSON.parse(userJson)
+
+      if (accessToken) {
       const response = await axios.put<UserInfo>(
-        `http://localhost:8080/users/${userParse.id}`,
+        `http://localhost:8080/users/${userInfo.id}`,
         updatedInfo,
       );
 
       setUserInfo({ ...userInfo, ...response.data }); // Merge updated data with existing userInfo
+    }
     } catch (error) {
       console.error('Failed to update user info:', error);
     }

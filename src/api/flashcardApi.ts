@@ -8,9 +8,11 @@ interface DeckData {
 }
 
 
-export const getUserDecks = async (id: string) => {
+export const getUserDecks = async (id: string, accessToken:any) => {
     const response = await axios.get(`http://localhost:8080/deck/user/${id}`, {
-
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+    },
       withCredentials: true,
     });
   
@@ -24,8 +26,6 @@ export const getUserDecks = async (id: string) => {
 // Function to fetch deck data from backend
 export const getDeckData = async (deckId: string, token: any): Promise<DeckData> => {
   try {
-    const userJSON: any = localStorage.getItem('user')
-    const userParsed: any = JSON.parse(userJSON)
 
     const response = await axios.get(`http://localhost:8080/deck/${deckId}`,  {
         headers: {
