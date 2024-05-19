@@ -8,15 +8,12 @@ interface DeckData {
 }
 
 
-export const getUserDecks = async (id: string, token: string) => {
+export const getUserDecks = async (id: string) => {
     const response = await axios.get(`http://localhost:8080/deck/user/${id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+
       withCredentials: true,
     });
   
-    localStorage.setItem('userDecks', JSON.stringify(response.data));
     console.log(`response.data: ${JSON.stringify(response.data)}`);
     return response.data;
   };
@@ -25,9 +22,17 @@ export const getUserDecks = async (id: string, token: string) => {
 
   
 // Function to fetch deck data from backend
-export const getDeckData = async (deckId: string): Promise<DeckData> => {
+export const getDeckData = async (deckId: string, token: any): Promise<DeckData> => {
   try {
-    const response = await axios.get(`http://localhost:8080/api/decks/${deckId}`);
+    const userJSON: any = localStorage.getItem('user')
+    const userParsed: any = JSON.parse(userJSON)
+
+    const response = await axios.get(`http://localhost:8080/deck/${deckId}`,  {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        withCredentials: true,
+      });
     return response.data;
   } catch (error) {
     // Handle error
@@ -35,3 +40,19 @@ export const getDeckData = async (deckId: string): Promise<DeckData> => {
     throw error; // Rethrow the error to handle it in the component or context
   }
 };
+
+
+export const deleteDeck = async (deckId: string, token: any) => {
+    try {
+
+        const response = await axios.delete(`http://localhost:8080/deck/${deckId}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+            withCredentials: true,
+        })
+    } catch (error) {
+        console.error("Error in deleting deck: ", error)
+        throw error;
+    }
+}

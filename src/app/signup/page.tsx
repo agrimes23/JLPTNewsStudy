@@ -31,7 +31,7 @@ const Signup: React.FC = () => {
 
     const handleSubmit = async (e: any) => {
         e.preventDefault();
-        console.log("oo submitted: email: ", email + ", Password: " + password)
+
         try {
 
             register(inputValue.firstName, inputValue.lastName, inputValue.email, inputValue.password)
@@ -41,7 +41,7 @@ const Signup: React.FC = () => {
             setInputValue(initialInputValue)
 
         } catch (error) {
-            console.log("Registration error: " + error)
+            console.error("Registration error: " + error)
         }
     }
 

@@ -1,6 +1,7 @@
 "use client"
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import axios from 'axios';
+import { getUserInfo } from '@/api/userApi';
 
 // Define the shape of the user data and context state
 interface User {
@@ -16,7 +17,7 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
   register: (firstName: string, lastName: string, email: string, password: string) => Promise<void>;
-  refreshAccessToken: () => Promise<void>;
+  checkAndRefreshAccessToken: any;
 }
 
 // Create the context with a default value
@@ -26,25 +27,61 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [accessToken, setAccessToken] = useState<string | null>(null);
+  
+  const refreshAccessToken = async () => {
+    
+    try {
+      // Make a request to the backend to refresh the access token
+      const response = await axios.get('http://localhost:8080/auth/refresh', {
+        withCredentials: true,
+      });
+      // Extract the new access token from the response
+      const { accessToken } = response.data;
+      console.log("access token refresh: " + JSON.stringify(accessToken))
+
+      // Update the access token in state
+      setAccessToken(accessToken);
+
+      // Proceed with fetching user information
+      const userRes: any = await getUserInfo(accessToken);
+      setUser(userRes)
+    } catch (error) {
+      console.error('Error refreshing access token:', error);
+      // Handle error (e.g., redirect to login page)
+    }
+  };
+
+  // Function to check and refresh access token on page reload
+  const checkAndRefreshAccessToken = async () => {
+    try {
+      if (!accessToken) {       
+        await refreshAccessToken();
+
+      } else {
+        await getUserInfo(accessToken);
+      }
+    } catch (error) {
+      console.error('Error checking and refreshing access token:', error);
+      // Handle error (e.g., redirect to login page)
+    }
+  };
+
+  useEffect(() => {
+    checkAndRefreshAccessToken();
+  }, []);
+
 
   const login = async (email: string, password: string) => {
  
     try {
-      // Send login request to the server
       const response = await axios.post('http://localhost:8080/auth/login', { email, password }, { withCredentials: true });
   
-      // Extract accessToken from the response
       const { accessToken, user } = response.data;
-  
-      // Set the accessToken in the context state
+      localStorage.setItem("user", JSON.stringify(user))
       setAccessToken(accessToken);
-  
-      // Optionally, set the user information in the context state
       setUser(user);
     } catch (error) {
-      // Handle login error
       console.error('Login error:', error);
-      // Optionally, you can handle login error and display appropriate messages to the user
     }
   };
 
@@ -62,14 +99,9 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     setUser(user);
   };
 
-  const refreshAccessToken = async () => {
-    const response = await axios.post('http://localhost:8080/auth/refresh', {}, { withCredentials: true });
-    const { accessToken } = response.data;
-    setAccessToken(accessToken);
-  };
 
   return (
-    <AuthContext.Provider value={{ user, accessToken, login, logout, register, refreshAccessToken }}>
+    <AuthContext.Provider value={{ user, accessToken, login, logout, register, checkAndRefreshAccessToken }}>
       {children}
     </AuthContext.Provider>
   );

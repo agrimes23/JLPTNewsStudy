@@ -52,6 +52,8 @@ const FlashcardDeckProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const deleteDeck = (deckId: string) => {
+    deleteDeck
+    
     setDecks(prevDecks => prevDecks.filter(deck => deck.id !== deckId));
   };
 

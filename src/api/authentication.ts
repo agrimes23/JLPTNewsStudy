@@ -1,15 +1,18 @@
 // authentication related, probably login, logout, and register
 import axios from "axios"
 
-type LoginFunction = (email: string, password: string) => Promise<void>;
+type LoginFunction = (email: string, password: string, token: any) => Promise<void>;
 
 type RegisterFunction = (firstName: string, lastName: string, email: string, password: string) => Promise<void>
 
-export const login: LoginFunction = async (email, password) => {
-    const response = await axios.post('http://localhost:8080/auth/login', { email, password }, { withCredentials: true })
+export const login: LoginFunction = async (email, password, token) => {
+    const response = await axios.post('http://localhost:8080/auth/login', { email, password }, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        withCredentials: true,
+      })
 
-    console.log(`response.data: ${JSON.stringify(response)}`)
-    console.log(`response.headers: ${JSON.stringify(response.headers)}`)
     return response.data;
 };
 

@@ -26,7 +26,6 @@ const Login: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("Submitted: email: ", email + ", Password: " + password);
     try {
       const data = await login(email, password);
       // Handle successful login
@@ -34,7 +33,7 @@ const Login: React.FC = () => {
       router.push('/dashboard');
     } catch (error: any) {
       // Handle login error
-      console.log("Login error oops: ", error.message);
+      console.error("Login error oops: ", error.message);
     }
   };
 

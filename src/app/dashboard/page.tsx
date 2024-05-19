@@ -1,6 +1,6 @@
 "use client"
 import React, { useEffect, useState } from 'react';
-import { getUserDecks, getDeckData } from '@/api/flashcardApi';
+import { getUserDecks, getDeckData, deleteDeck } from '@/api/flashcardApi';
 import Cookies from 'js-cookie';
 import { getUserInfo } from '@/api/userApi';
 import { useAuth } from '@/context/AuthContext';
@@ -8,6 +8,7 @@ import { useUser } from '@/context/UserContext';
 import { useFlashcardDeck } from '@/context/FlashcardContext';
 
 interface DeckInfo {
+    _id: any,
     title: string;
     description: string;
     modifiedDate: string;
@@ -22,46 +23,60 @@ interface UserData {
 
 const Dashboard: React.FC = () => {
     const { accessToken, user } = useAuth()
+    const { getUser, userInfo } = useUser()
     const [userDecks, setUserDecks] = useState<DeckInfo[]>([]);
     const [userData, setUserData] = useState<UserData | null>(null);
 
-    useEffect(() => {
-        const fetchData = async () => {
-          try {
-            if (!accessToken || !user?.id) {
-              throw new Error('Access token or user info not found');
-            }
 
-            fetchData
-    
-            const id = user.id; // Assuming 'id' is the user ID field in the user info
-            const decks = await getUserDecks(id, accessToken);
+    const fetchData = async () => {
+        try {
+            const userJSON:any = localStorage.getItem('user')
+
+            const userLs = JSON.parse(userJSON)
             
-            // Iterate over each deck and fetch deck data
-            const decksWithData = await Promise.all(decks.map(async (deck: any) => {
-              try {
-                const deckData = await getDeckData(deck.id);
-                return { ...deck, ...deckData }; // Merge deck data with existing deck info
-              } catch (error) {
-                console.error(`Error fetching deck data for deck ID ${deck.id}:`, error);
-                return deck; // Return original deck info if fetching deck data fails
-              }
-            }));
-    
-            setUserDecks(decksWithData);
-          } catch (error) {
-            console.error("Error fetching user data:", error);
-          }
-        };
-    
-        fetchData();
-      }, [accessToken, user]);
+          getUser();
+          console.log("this is user ifno: " + JSON.stringify(userInfo))
+
+          const decks = await getUserDecks(userLs.id);
+          console.log("decks: " + JSON.stringify(decks))
+          
+          // Iterate over each deck and fetch deck data
+          const decksWithData = await Promise.all(decks.map(async (deck: any) => {
+            try {
+              const deckData = await getDeckData(deck._id, accessToken);
+              return { ...deck, ...deckData }; // Merge deck data with existing deck info
+            } catch (error) {
+              console.error(`Error fetching deck data for deck ID ${deck.id}:`, error);
+              return deck; // Return original deck info if fetching deck data fails
+            }
+          }));
+  
+          setUserDecks(decksWithData);
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+        }
+      };
+
+    const deleteSelectedDeck = (deckId: any) => {
+        console.log("deck id: " + JSON.stringify(deckId))
+        try {
+            deleteDeck(deckId, accessToken)
+            fetchData()
+        } catch (error) {
+            console.error("Error deleting deck data:", error);
+        }
+        
+    }
+
+    useEffect(() => {
+        fetchData(); // Fetch user decks on component mount
+    }, [accessToken, user]);
 
     return (
         <div className="flex flex-col min-w-screen min-h-screen items-center">
             {/* Navbar on dash page */}
             <div className="flex flex-col justify-center items-center w-[80%] h-[100px] my-20 ">
-                <h1 className="text-[30px] h-full">Welcome, {userData?.firstName}!<span className="text-[10px] bg-blue-300">settings</span></h1>
+                <h1 className="text-[30px] h-full">Welcome, {user?.firstName}!<span className="text-[10px] bg-blue-300">settings</span></h1>
                 <h5 className="mt-3 underline">Logout</h5>
                 
                 {/* nav options */}
@@ -85,8 +100,8 @@ const Dashboard: React.FC = () => {
                                 <p className="self-end">{deckInfo.modifiedDate}</p>
                             </div>
                             <div className="flex flex-col gap-6 self-end">
-                                <p className="text-red-600 self-end">delete</p>
-                                <p className="text-blue-600 self-end">edit</p>
+                                <button onClick={() => deleteSelectedDeck(deckInfo._id)} className="text-red-600 self-end">delete</button>
+                                <button className="text-blue-600 self-end">edit</button>
                             </div>
                         </div>
                     );
