@@ -11,7 +11,7 @@ import { getUserInfo } from "@/api/userApi";
 
 // Define the shape of the user data and context state
 interface User {
-  id: string;
+  _id: string;
   email: string;
   firstName: string;
   lastName: string;

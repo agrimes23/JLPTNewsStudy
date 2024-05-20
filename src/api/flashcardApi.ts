@@ -21,8 +21,6 @@ export const getUserDecks = async (id: string, accessToken:any) => {
   };
 
 
-
-  
 // Function to fetch deck data from backend
 export const getDeckData = async (deckId: string, token: any): Promise<DeckData> => {
   try {
@@ -56,3 +54,19 @@ export const deleteDeck = async (deckId: string, token: any) => {
         throw error;
     }
 }
+
+export const createDeckApi = async (userId: string, token: any, newDeck: any) => {
+  try {
+    const response = await axios.post(`http://localhost:8080/deck/${userId}`, newDeck, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      withCredentials: true,
+    });
+    console.log("response data in creating deck: " + JSON.stringify(response.data))
+    return response.data;
+  } catch (error) {
+    console.log("error with creating deck: " + JSON.stringify(error));
+  }
+};
+  

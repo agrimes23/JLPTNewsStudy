@@ -1,6 +1,7 @@
 "use client"
 import React, { createContext, useContext, useState, ReactNode } from 'react';
-import { getDeckData } from '@/api/flashcardApi'; // Import the getDeckData function
+import { createDeckApi } from '@/api/flashcardApi';
+import { useAuth } from './AuthContext';
 
 // Define the shape of deck and flashcard data
 interface Flashcard {
@@ -40,9 +41,16 @@ const FlashcardDeckContext = createContext<FlashcardDeckContextType | undefined>
 // Define the provider component
 const FlashcardDeckProvider = ({ children }: { children: ReactNode }) => {
   const [decks, setDecks] = useState<Deck[]>([]);
+  const { accessToken, user } = useAuth()
 
-  const createDeck = (deck: Deck) => {
+  const createDeck = async (deck: Deck) => {
     setDecks(prevDecks => [...prevDecks, deck]);
+
+    if (user && accessToken) {
+      const response: any = await createDeckApi(user._id, accessToken, deck)
+      console.log("response from create deck: " + JSON.stringify(response))
+    }
+
   };
 
   const editDeck = (deckId: string, updatedDeck: Partial<Deck>) => {
@@ -52,12 +60,11 @@ const FlashcardDeckProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const deleteDeck = (deckId: string) => {
-    deleteDeck
-    
+        
     setDecks(prevDecks => prevDecks.filter(deck => deck.id !== deckId));
   };
 
-  const createFlashcard = (deckId: string, flashcard: Flashcard) => {
+  const createFlashcard = async (deckId: string, flashcard: Flashcard) => {
     setDecks(prevDecks =>
       prevDecks.map(deck =>
         deck.id === deckId ? { ...deck, flashcards: [...deck.flashcards, flashcard] } : deck

@@ -6,6 +6,8 @@ import { getUserInfo } from "@/api/userApi";
 import { useAuth } from "@/context/AuthContext";
 import { useUser } from "@/context/UserContext";
 import { useFlashcardDeck } from "@/context/FlashcardContext";
+import CreateDeck from "@/components/CreateDeck";
+import { useRouter } from "next/navigation";
 
 interface DeckInfo {
   _id: any;
@@ -26,6 +28,8 @@ const Dashboard: React.FC = () => {
   const { getUser, userInfo } = useUser();
   const [userDecks, setUserDecks] = useState<DeckInfo[]>([]);
   const [userData, setUserData] = useState<UserData | null>(null);
+  const [isCreateDeck, setIsCreateDeck] = useState<boolean>(false)
+  const router = useRouter()
 
   const fetchData = async () => {
     try {
@@ -68,10 +72,10 @@ const Dashboard: React.FC = () => {
 
   useEffect(() => {
     fetchData(); // Fetch user decks on component mount
-  }, [accessToken, user]);
+  }, [accessToken, user, isCreateDeck]);
 
   return (
-    <div className="flex flex-col min-w-screen min-h-screen items-center">
+    <div className="flex flex-col min-w-screen min-h-screen items-center mb-20">
       {/* Navbar on dash page */}
       <div className="flex flex-col justify-center items-center w-[80%] h-[100px] my-20 ">
         <h1 className="text-[30px] h-full">
@@ -82,23 +86,26 @@ const Dashboard: React.FC = () => {
 
         {/* nav options */}
         <div className="flex items-center w-full justify-center mt-10">
-          <button className="bg-purple-200 border-[1px] border-purple-700 px-10 py-2 rounded-lg">
-            + Create New Deck
-          </button>
+        <button
+        className={`px-10 py-2 rounded-lg ${isCreateDeck ? 'bg-red-200 border-red-700' : 'bg-purple-200 border-purple-700'}`}
+        onClick={() => setIsCreateDeck((prevState) => !prevState)}
+      >
+        {isCreateDeck ? "Cancel" : "+ Create New Deck"}
+      </button>
         </div>
       </div>
 
       {/* list of available decks */}
       <div className="flex flex-col w-[100%] h-[100%] items-center gap-14">
-        {/* One deck and info */}
+        {/* Deck Info Card */}
         {userDecks.map((deckInfo: DeckInfo, index: number) => {
           return (
-            <div
+            <button
               key={index}
-              className="flex w-[600px] py-8 border-[1px] rounded-lg border-gray-500 justify-between px-8 shadow-lg"
+              className="group flex w-[600px] py-8 border-[1px] rounded-lg border-gray-500 justify-between px-8 shadow-lg hover:bg-yellow-100 hover:border-black cursor-pointer" onClick={() => router.push('/deck')}
             >
-              <div className="flex flex-col gap-6 self-end">
-                <h3 className="text-[22px]">{deckInfo.title}</h3>
+              <div className="flex flex-col gap-6 self-end ">
+                <h3 className="text-[22px] group-hover:underline">{deckInfo.title}</h3>
                 <p>{deckInfo.description}</p>
               </div>
               <div className="flex flex-col gap-6 self-end">
@@ -114,9 +121,12 @@ const Dashboard: React.FC = () => {
                 </button>
                 <button className="text-blue-600 self-end">edit</button>
               </div>
-            </div>
+            </button>
           );
         })}
+        {isCreateDeck && (
+          <CreateDeck />
+        )}
       </div>
     </div>
   );
