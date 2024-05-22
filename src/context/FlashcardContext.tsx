@@ -1,6 +1,6 @@
 "use client"
 import React, { createContext, useContext, useState, ReactNode } from 'react';
-import { createDeckApi } from '@/api/flashcardApi';
+import { createDeckApi, getUserDecks, createFlashCardApi } from '@/api/flashcardApi';
 import { useAuth } from './AuthContext';
 
 // Define the shape of deck and flashcard data
@@ -33,6 +33,7 @@ interface FlashcardDeckContextType {
   deleteFlashcard: (deckId: string, flashcardId: string) => void;
   getDeck: (deckId: string) => Deck | undefined;
   getFlashcard: (deckId: string, flashcardId: string) => Flashcard | undefined;
+  getDecksList: (userId: string, accessToken: string) => any;
 }
 
 // Create the context with a default value
@@ -70,6 +71,7 @@ const FlashcardDeckProvider = ({ children }: { children: ReactNode }) => {
         deck.id === deckId ? { ...deck, flashcards: [...deck.flashcards, flashcard] } : deck
       )
     );
+    const response = await createFlashCardApi(deckId, accessToken, flashcard)
   };
 
   const editFlashcard = (deckId: string, flashcardId: string, updatedFlashcard: Partial<Flashcard>) => {
@@ -97,8 +99,25 @@ const FlashcardDeckProvider = ({ children }: { children: ReactNode }) => {
     );
   };
 
+  const getDecksList = async (userId: string, accessToken: string) => {
+    try {
+      const decksList = await getUserDecks(userId, accessToken);
+      setDecks(decksList)
+      console.log("ahh decks: " + JSON.stringify(decks))
+      console.log("ahh decksList: " + JSON.stringify(decksList))
+
+      return decksList
+    } catch (error) {
+      console.log("error, cannot get deck list")
+    }
+  }
+
   const getDeck = (deckId: string): Deck | undefined => {
-    return decks.find(deck => deck.id === deckId);
+    console.log("deck id: " + JSON.stringify(decks))
+    console.log("deck id: " + JSON.stringify(deckId))
+    const foundDeck = decks.find(deck => deck.id === deckId);
+    console.log("found deck: " + JSON.stringify(foundDeck))
+    return foundDeck
   };
 
   const getFlashcard = (deckId: string, flashcardId: string): Flashcard | undefined => {
@@ -118,7 +137,8 @@ const FlashcardDeckProvider = ({ children }: { children: ReactNode }) => {
         editFlashcard,
         deleteFlashcard,
         getDeck,
-        getFlashcard
+        getFlashcard,
+        getDecksList
       }}
     >
       {children}

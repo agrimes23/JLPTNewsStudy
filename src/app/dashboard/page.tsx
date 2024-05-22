@@ -9,6 +9,7 @@ import { useFlashcardDeck } from "@/context/FlashcardContext";
 import CreateDeck from "@/components/CreateDeck";
 import { useRouter } from "next/navigation";
 
+
 interface DeckInfo {
   _id: any;
   title: string;
@@ -16,26 +17,19 @@ interface DeckInfo {
   modifiedDate: string;
 }
 
-interface UserData {
-  id: string;
-  email?: string;
-  firstName: string;
-  lastName: string;
-}
 
 const Dashboard: React.FC = () => {
   const { accessToken, user, checkAndRefreshAccessToken } = useAuth();
   const { getUser, userInfo } = useUser();
   const [userDecks, setUserDecks] = useState<DeckInfo[]>([]);
-  const [userData, setUserData] = useState<UserData | null>(null);
   const [isCreateDeck, setIsCreateDeck] = useState<boolean>(false)
   const router = useRouter()
+  const { getDecksList } = useFlashcardDeck()
 
   const fetchData = async () => {
     try {
-      await getUser();
-      if (userInfo) {
-        const decks = await getUserDecks(userInfo._id, accessToken);
+      if (userInfo && accessToken) {
+        const decks = await getDecksList(userInfo._id, accessToken);
         console.log("decks: " + JSON.stringify(decks));
         // Iterate over each deck and fetch deck data
         const decksWithData = await Promise.all(
@@ -45,7 +39,7 @@ const Dashboard: React.FC = () => {
               return { ...deck, ...deckData }; // Merge deck data with existing deck info
             } catch (error) {
               console.error(
-                `Error fetching deck data for deck ID ${deck.id}:`,
+                `Error fetching deck data for deck ID ${deck._id}:`,
                 error
               );
               return deck; // Return original deck info if fetching deck data fails
@@ -71,8 +65,17 @@ const Dashboard: React.FC = () => {
   };
 
   useEffect(() => {
-    fetchData(); // Fetch user decks on component mount
+
+    if (accessToken && user) {
+      fetchData(); // Fetch user decks on component mount
+    }
+    console.log("user decks: " + JSON.stringify(userDecks))
   }, [accessToken, user, isCreateDeck]);
+
+  
+  useEffect(() => {
+    console.log("User decks:", userDecks);
+  }, [userDecks]);
 
   return (
     <div className="flex flex-col min-w-screen min-h-screen items-center mb-20">
@@ -100,9 +103,9 @@ const Dashboard: React.FC = () => {
         {/* Deck Info Card */}
         {userDecks.map((deckInfo: DeckInfo, index: number) => {
           return (
-            <button
+            <div
               key={index}
-              className="group flex w-[600px] py-8 border-[1px] rounded-lg border-gray-500 justify-between px-8 shadow-lg hover:bg-yellow-100 hover:border-black cursor-pointer" onClick={() => router.push('/deck')}
+              className="flex w-[600px] py-8 border-[1px] rounded-lg border-gray-500 justify-between px-8 shadow-lg hover:bg-yellow-100 hover:border-black cursor-pointer" onClick={() => router.push(`/deck/${deckInfo._id}`)}
             >
               <div className="flex flex-col gap-6 self-end ">
                 <h3 className="text-[22px] group-hover:underline">{deckInfo.title}</h3>
@@ -121,12 +124,10 @@ const Dashboard: React.FC = () => {
                 </button>
                 <button className="text-blue-600 self-end">edit</button>
               </div>
-            </button>
+            </div>
           );
         })}
-        {isCreateDeck && (
-          <CreateDeck />
-        )}
+        {isCreateDeck && <CreateDeck />}
       </div>
     </div>
   );

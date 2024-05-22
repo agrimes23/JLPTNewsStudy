@@ -69,4 +69,38 @@ export const createDeckApi = async (userId: string, token: any, newDeck: any) =>
     console.log("error with creating deck: " + JSON.stringify(error));
   }
 };
+
+
+// export const getFlashcardsApi = async () => {
+//   try {
+//     const response = await axios.get(`http://localhost:8080/deck/${deckId}`,  {
+//         headers: {
+//           Authorization: `Bearer ${token}`,
+//         },
+//         withCredentials: true,
+//       });
+//     return response.data;
+//   } catch (error) {
+//     // Handle error
+//     console.error("Error fetching deck data:", error);
+//     throw error; // Rethrow the error to handle it in the component or context
+//   }
+// }
+
+
+export const createFlashCardApi = async (deckId: string, token: any, newFlashcard: any) => {
+  try {
+    const response = await axios.post(`http://localhost:8080/deck/${deckId}/flashcards`, newFlashcard, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      withCredentials: true,
+    });
+    console.log("response data in adding new flashcard in deck: " + JSON.stringify(response.data))
+    return response.data;
+  } catch (error) {
+    console.log("error with add new flashcard to deck: " + JSON.stringify(error));
+  }
+};
+  
   
