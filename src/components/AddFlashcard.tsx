@@ -12,25 +12,25 @@ const AddFlashcard = () => {
 
 
   const handleSubmit = async (e: any) => {
-    e.preventDefault(); // Prevent default form submission behavior
+    e.preventDefault();
 
-    // Create a new flashcard object
-    const flashcard: any = {
-      frontSide: frontSide,
-      backSide: backSide,
-      jlptLevel: '', // Add other properties as needed
-      shouldRetest: true, // Example value, modify as needed
+    const flashcard = {
+      frontSide,
+      backSide,
+      jlptLevel: '',
+      shouldRetest: true,
     };
 
-    // Call the createFlashcard function to submit the data to the server
+    const requestBody: any = {
+      flashcards: [flashcard], // Wrap the flashcard object in a flashcards array
+    };
+
     try {
-      await createFlashcard(deckId.id, flashcard); // Assuming deckId is available in your component
-      // Optionally, reset the form fields after successful submission
+      await createFlashcard(deckId.id, requestBody);
       setFrontSide('');
       setBackSide('');
     } catch (error) {
       console.error('Error creating flashcard:', error);
-      // Handle error
     }
   };
 
