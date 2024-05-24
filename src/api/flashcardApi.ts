@@ -82,23 +82,6 @@ export const createDeckApi = async (userId: string, token: any, newDeck: any) =>
 };
 
 
-// export const getFlashcardsApi = async () => {
-//   try {
-//     const response = await axios.get(`http://localhost:8080/deck/${deckId}`,  {
-//         headers: {
-//           Authorization: `Bearer ${token}`,
-//         },
-//         withCredentials: true,
-//       });
-//     return response.data;
-//   } catch (error) {
-//     // Handle error
-//     console.error("Error fetching deck data:", error);
-//     throw error; // Rethrow the error to handle it in the component or context
-//   }
-// }
-
-
 export const createFlashCardApi = async (deckId: string, token: any, newFlashcard: any) => {
   try {
     const response = await axios.post(`http://localhost:8080/deck/${deckId}/flashcards`, newFlashcard, {
@@ -114,4 +97,16 @@ export const createFlashCardApi = async (deckId: string, token: any, newFlashcar
   }
 };
   
-  
+export const deleteFlashcardApi = async (deckId: string, flashcardId: string, token: any) => {
+  try {
+    const response = await axios.delete(`http://localhost:8080/deck/${deckId}/flashcards/${flashcardId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      withCredentials: true,
+    })
+  } catch (error) {
+    console.error("Error in deleting flashcard in the api service: ", error)
+    throw error;
+  }
+}

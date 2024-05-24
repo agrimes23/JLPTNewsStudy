@@ -11,7 +11,17 @@ const Deck = () => {
 
     const [deckInfo, setDeckInfo] = useState<any | undefined>(undefined); // Set initial state to undefined
     const params: any = useParams();
-    const { getDeck } = useFlashcardDeck();
+    const { getDeck, deleteFlashcard } = useFlashcardDeck();
+
+    const handleDeleteFlashcard = async (flashcardId: string) => {
+        if (deckInfo) {
+          await deleteFlashcard(deckInfo.id, flashcardId);
+          setDeckInfo((prevDeck: any) => ({
+            ...prevDeck,
+            flashcards: prevDeck.flashcards.filter((flashcard: any) => flashcard._id !== flashcardId),
+          }));
+        }
+      };
   
     useEffect(() => {
       const fetchDeckInfo = async () => {
@@ -62,15 +72,13 @@ const Deck = () => {
                     </div>
                     <div className="flex flex-col ml-8 justify-center gap-10">
                         <button className="text-blue-600">Edit</button>
-                        <button className="text-red-600">Del</button>
+                        <button className="text-red-600" onClick={() => handleDeleteFlashcard(flashcard._id)}>Del</button>
                     </div>
                 </div>
 
 
                     )
                 })}
-                {/* a flashcard */}
-                
 
                 <AddFlashcard />
 

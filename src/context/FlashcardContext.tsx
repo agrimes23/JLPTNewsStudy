@@ -1,6 +1,6 @@
 "use client"
 import React, { createContext, useContext, useState, ReactNode } from 'react';
-import { createDeckApi, getUserDecks, createFlashCardApi, getDeckData } from '@/api/flashcardApi';
+import { createDeckApi, getUserDecks, createFlashCardApi, getDeckData, deleteFlashcardApi } from '@/api/flashcardApi';
 import { useAuth } from './AuthContext';
 
 // Define the shape of deck and flashcard data
@@ -93,15 +93,20 @@ const FlashcardDeckProvider = ({ children }: { children: ReactNode }) => {
     );
   };
 
-  const deleteFlashcard = (deckId: string, flashcardId: string) => {
-    setDecks(prevDecks =>
-      prevDecks.map(deck =>
-        deck.id === deckId
-          ? { ...deck, flashcards: deck.flashcards.filter(flashcard => flashcard._id !== flashcardId) }
-          : deck
-      )
-    );
-  };
+  const deleteFlashcard = async (deckId: string, flashcardId: string) => {
+    try {
+      await deleteFlashcardApi(deckId, flashcardId, accessToken); // Assuming accessToken is available in your context
+      setDecks(prevDecks =>
+        prevDecks.map(deck =>
+          deck.id === deckId
+            ? { ...deck, flashcards: deck.flashcards.filter(flashcard => flashcard._id !== flashcardId) }
+            : deck
+        )
+      );
+    } catch (error) {
+      console.error("Error deleting flashcard:", error);
+    }
+  }
 
   const getDecksList = async (userId: string, accessToken: string) => {
     try {
