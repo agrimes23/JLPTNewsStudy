@@ -70,7 +70,6 @@ const AddFlashcard = () => {
         </div>
       </div>
       <div className="flex flex-col ml-8 justify-center gap-10">
-        <button className="text-blue-600">Edit</button>
         <button className="text-red-600">Del</button>
       </div>
       </div>

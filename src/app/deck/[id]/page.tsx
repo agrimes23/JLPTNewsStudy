@@ -9,25 +9,23 @@ import { useFlashcardDeck } from '@/context/FlashcardContext'
 
 const Deck = () => {
 
-    const [deckInfo, setDeckInfo] = useState<any>({})
-
-    const params: any = useParams()
-    const { getDeck } = useFlashcardDeck()
-
-    console.log("params: " + JSON.stringify(params))
-
-    const getDeckInfo = () => {
-        console.log("params id: " + params.id)
-        const deck = getDeck(params.id)
-
-        console.log("deck: " + JSON.stringify(deck))
-        setDeckInfo(deck)
-    }
-
+    const [deckInfo, setDeckInfo] = useState<any | undefined>(undefined); // Set initial state to undefined
+    const params: any = useParams();
+    const { getDeck } = useFlashcardDeck();
+  
     useEffect(() => {
-        getDeckInfo()
-    }, [])
-
+      const fetchDeckInfo = async () => {
+        try {
+          const deck = await getDeck(params.id);
+          console.log("deck:", deck);
+          setDeckInfo(deck);
+        } catch (error) {
+          console.error("Error fetching deck:", error);
+        }
+      };
+  
+      fetchDeckInfo();
+    }, [params.id, getDeck]);
     
   return (
     <>
@@ -35,17 +33,18 @@ const Deck = () => {
         <div className="flex flex-col min-w-screen min-h-screen items-center bg-blue-100">
             {/* Deck Info */}
             <div className="my-28 max-w-[50%]">
-                <h2 className="text-[40px]"></h2>
-                <h4 className="text-[20px] mt-6">deck description</h4>
-                <p>modified by</p>
+                <h2 className="text-[40px]">{deckInfo?.title}</h2>
+                <h4 className="text-[20px] mt-6">{deckInfo?.description}</h4>
+                <p>{deckInfo?.modifiedDate}</p>
             </div>
 
 
             {/* Flascards container*/}
             <div className="flex flex-col w-[80%] items-center gap-28">
-                
-                {/* a flashcard */}
-                <div className="flex w-full justify-center">
+                {deckInfo?.flashcards.map((flashcard: any, index: number) => {
+                    
+                    return (
+                        <div key={index} className="flex w-full justify-center">
                     <div className="flex flex-col">
                         <div className="flex w-[800px] mb-4">
                             <h3 className="w-[50%] text-center text-gray-400">Front</h3>
@@ -53,11 +52,10 @@ const Deck = () => {
                         </div>
                         <div className="flex border-2 w-[800px] h-[350px] bg-white rounded-lg shadow-lg">
                             <div className="flex w-[50%] h-full items-center justify-center border-r-[1px]">
-                                涙
+                            {flashcard?.frontSide}
                             </div>
                             <div className="flex w-[50%] h-full items-center justify-center border-l-[1px]">
-                                なみだ
-                                tear
+                            {flashcard?.backSide}
                             </div>
                         </div>
                         
@@ -67,6 +65,12 @@ const Deck = () => {
                         <button className="text-red-600">Del</button>
                     </div>
                 </div>
+
+
+                    )
+                })}
+                {/* a flashcard */}
+                
 
                 <AddFlashcard />
 

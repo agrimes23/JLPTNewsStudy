@@ -1,14 +1,16 @@
 "use client"
 import React, { createContext, useContext, useState, ReactNode } from 'react';
-import { createDeckApi, getUserDecks, createFlashCardApi } from '@/api/flashcardApi';
+import { createDeckApi, getUserDecks, createFlashCardApi, getDeckData } from '@/api/flashcardApi';
 import { useAuth } from './AuthContext';
 
 // Define the shape of deck and flashcard data
 interface Flashcard {
-  id: string;
-  question: string;
-  answer: string;
-}
+  _id: string,
+  frontSide: string,
+  backSide: string,
+  jlptLevel: string,
+  shouldRetest: boolean,
+};
 
 interface Deck {
   id: string;
@@ -21,6 +23,7 @@ interface DeckData {
   title: string;
   description: string;
   modifiedDate: string;
+  flashcards: Flashcard[];
 }
 
 interface FlashcardDeckContextType {
@@ -31,9 +34,10 @@ interface FlashcardDeckContextType {
   createFlashcard: (deckId: string, flashcard: Flashcard) => void;
   editFlashcard: (deckId: string, flashcardId: string, updatedFlashcard: Partial<Flashcard>) => void;
   deleteFlashcard: (deckId: string, flashcardId: string) => void;
-  getDeck: (deckId: string) => Deck | undefined;
-  getFlashcard: (deckId: string, flashcardId: string) => Flashcard | undefined;
+  getDeck: (deckId: string) => Promise<Deck | undefined>;
+  getFlashcard: (deckId: string, flashcardId: string) => Promise<Flashcard | undefined>;
   getDecksList: (userId: string, accessToken: string) => any;
+  
 }
 
 // Create the context with a default value
@@ -81,7 +85,7 @@ const FlashcardDeckProvider = ({ children }: { children: ReactNode }) => {
           ? {
               ...deck,
               flashcards: deck.flashcards.map(flashcard =>
-                flashcard.id === flashcardId ? { ...flashcard, ...updatedFlashcard } : flashcard
+                flashcard._id === flashcardId ? { ...flashcard, ...updatedFlashcard } : flashcard
               )
             }
           : deck
@@ -93,7 +97,7 @@ const FlashcardDeckProvider = ({ children }: { children: ReactNode }) => {
     setDecks(prevDecks =>
       prevDecks.map(deck =>
         deck.id === deckId
-          ? { ...deck, flashcards: deck.flashcards.filter(flashcard => flashcard.id !== flashcardId) }
+          ? { ...deck, flashcards: deck.flashcards.filter(flashcard => flashcard._id !== flashcardId) }
           : deck
       )
     );
@@ -112,18 +116,20 @@ const FlashcardDeckProvider = ({ children }: { children: ReactNode }) => {
     }
   }
 
-  const getDeck = (deckId: string): Deck | undefined => {
-    console.log("deck id: " + JSON.stringify(decks))
-    console.log("deck id: " + JSON.stringify(deckId))
-    const foundDeck = decks.find(deck => deck.id === deckId);
-    console.log("found deck: " + JSON.stringify(foundDeck))
-    return foundDeck
-  };
+const getDeck = async (deckId: string): Promise<any | undefined> => {
+  try {
+    const response = await getDeckData(deckId, accessToken); // Assuming you have a function to fetch deck data
+    return response; // Return the fetched deck
+  } catch (error) {
+    console.error("Error fetching deck:", error);
+    return undefined; // Return undefined if there's an error
+  }
+};
 
-  const getFlashcard = (deckId: string, flashcardId: string): Flashcard | undefined => {
-    const deck = getDeck(deckId);
-    return deck?.flashcards.find(flashcard => flashcard.id === flashcardId);
-  };
+const getFlashcard = async (deckId: string, flashcardId: string): Promise<Flashcard | undefined> => {
+  const deck = await getDeck(deckId); // Await the result of getDeck
+  return deck?.flashcards.find((flashcard: Flashcard) => flashcard._id === flashcardId);
+};
 
 
   return (

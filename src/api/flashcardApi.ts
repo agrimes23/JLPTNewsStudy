@@ -1,10 +1,21 @@
 // flashcard http routes
 import axios from 'axios'
 
+
+
+interface Flashcard {
+  _id: string,
+  frontSide: string,
+  backSide: string,
+  jlptLevel: string,
+  shouldRetest: boolean,
+};
+
 interface DeckData {
-    title: string;
-    description: string;
-    modifiedDate: string;
+  title: string;
+  description: string;
+  modifiedDate: string;
+  flashcards: Flashcard[];
 }
 
 
