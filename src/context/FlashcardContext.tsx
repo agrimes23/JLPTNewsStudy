@@ -1,6 +1,6 @@
 "use client"
 import React, { createContext, useContext, useState, ReactNode } from 'react';
-import { createDeckApi, getUserDecks, createFlashCardApi, getDeckData, deleteFlashcardApi } from '@/api/flashcardApi';
+import { createDeckApi, getUserDecks, createFlashCardApi, getDeckData, deleteFlashcardApi, editFlashcardApi } from '@/api/flashcardApi';
 import { useAuth } from './AuthContext';
 
 // Define the shape of deck and flashcard data
@@ -13,7 +13,7 @@ interface Flashcard {
 };
 
 interface Deck {
-  id: string;
+  _id: string;
   name: string;
   description: string;
   flashcards: Flashcard[];
@@ -60,45 +60,51 @@ const FlashcardDeckProvider = ({ children }: { children: ReactNode }) => {
 
   const editDeck = (deckId: string, updatedDeck: Partial<Deck>) => {
     setDecks(prevDecks =>
-      prevDecks.map(deck => (deck.id === deckId ? { ...deck, ...updatedDeck } : deck))
+      prevDecks.map(deck => (deck._id === deckId ? { ...deck, ...updatedDeck } : deck))
     );
   };
 
   const deleteDeck = (deckId: string) => {
         
-    setDecks(prevDecks => prevDecks.filter(deck => deck.id !== deckId));
+    setDecks(prevDecks => prevDecks.filter(deck => deck._id !== deckId));
   };
 
   const createFlashcard = async (deckId: string, flashcard: Flashcard) => {
     setDecks(prevDecks =>
       prevDecks.map(deck =>
-        deck.id === deckId ? { ...deck, flashcards: [...deck.flashcards, flashcard] } : deck
+        deck._id === deckId ? { ...deck, flashcards: [...deck.flashcards, flashcard] } : deck
       )
     );
     const response = await createFlashCardApi(deckId, accessToken, flashcard)
   };
 
-  const editFlashcard = (deckId: string, flashcardId: string, updatedFlashcard: Partial<Flashcard>) => {
-    setDecks(prevDecks =>
-      prevDecks.map(deck =>
-        deck.id === deckId
-          ? {
-              ...deck,
-              flashcards: deck.flashcards.map(flashcard =>
-                flashcard._id === flashcardId ? { ...flashcard, ...updatedFlashcard } : flashcard
-              )
-            }
-          : deck
-      )
-    );
+  const editFlashcard = async (deckId: string, flashcardId: string, updatedFlashcard: Partial<Flashcard>) => {
+    try {
+      await editFlashcardApi(deckId, flashcardId, updatedFlashcard, accessToken);
+      setDecks(prevDecks =>
+        prevDecks.map(deck =>
+          deck._id === deckId
+            ? {
+                ...deck,
+                flashcards: deck.flashcards.map(flashcard =>
+                  flashcard._id === flashcardId ? { ...flashcard, ...updatedFlashcard } : flashcard
+                ),
+              }
+            : deck
+        )
+      );
+    } catch (error) {
+      console.error("Error editing flashcard:", error);
+    }
   };
 
   const deleteFlashcard = async (deckId: string, flashcardId: string) => {
+    console.log("deck Id: " + JSON.stringify(deckId))
     try {
       await deleteFlashcardApi(deckId, flashcardId, accessToken); // Assuming accessToken is available in your context
       setDecks(prevDecks =>
         prevDecks.map(deck =>
-          deck.id === deckId
+          deck._id === deckId
             ? { ...deck, flashcards: deck.flashcards.filter(flashcard => flashcard._id !== flashcardId) }
             : deck
         )

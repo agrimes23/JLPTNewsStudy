@@ -98,6 +98,7 @@ export const createFlashCardApi = async (deckId: string, token: any, newFlashcar
 };
   
 export const deleteFlashcardApi = async (deckId: string, flashcardId: string, token: any) => {
+
   try {
     const response = await axios.delete(`http://localhost:8080/deck/${deckId}/flashcards/${flashcardId}`, {
       headers: {
@@ -110,3 +111,22 @@ export const deleteFlashcardApi = async (deckId: string, flashcardId: string, to
     throw error;
   }
 }
+
+export const editFlashcardApi = async (deckId: string, flashcardId: string, updatedFlashcard: Partial<Flashcard>, token: any) => {
+  try {
+    const response = await axios.put(
+      `http://localhost:8080/deck/${deckId}/flashcards/${flashcardId}`,
+      updatedFlashcard,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        withCredentials: true,
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error in editing flashcard in the api service: ", error);
+    throw error;
+  }
+};

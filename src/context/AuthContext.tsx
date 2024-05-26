@@ -28,7 +28,7 @@ interface AuthContextType {
     email: string,
     password: string
   ) => Promise<void>;
-  checkAndRefreshAccessToken: any;
+  checkAndRefreshAccessToken: () => Promise<void>;
 }
 
 // Create the context with a default value
@@ -38,6 +38,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [accessToken, setAccessToken] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
 
   const refreshAccessToken = async () => {
     try {
@@ -69,11 +70,14 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
       if (!accessToken) {
         await refreshAccessToken();
       } else {
-        await getUserInfo(accessToken);
+        const userRes: any = await getUserInfo(accessToken);
+        setUser(userRes);
       }
     } catch (error) {
       console.error("Error checking and refreshing access token:", error);
       // Handle error (e.g., redirect to login page)
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -135,7 +139,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
         checkAndRefreshAccessToken,
       }}
     >
-      {children}
+      {!loading && children}
     </AuthContext.Provider>
   );
 };

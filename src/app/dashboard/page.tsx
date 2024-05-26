@@ -1,14 +1,12 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { getUserDecks, getDeckData, deleteDeck } from "@/api/flashcardApi";
-import Cookies from "js-cookie";
-import { getUserInfo } from "@/api/userApi";
+import { getDeckData, deleteDeck } from "@/api/flashcardApi";
 import { useAuth } from "@/context/AuthContext";
 import { useUser } from "@/context/UserContext";
 import { useFlashcardDeck } from "@/context/FlashcardContext";
 import CreateDeck from "@/components/CreateDeck";
 import { useRouter } from "next/navigation";
-
+import withAuth from '@/hoc/withAuth';
 
 interface DeckInfo {
   _id: any;
@@ -17,36 +15,32 @@ interface DeckInfo {
   modifiedDate: string;
 }
 
-
 const Dashboard: React.FC = () => {
-  const { accessToken, user, checkAndRefreshAccessToken } = useAuth();
-  const { getUser, userInfo } = useUser();
+  const { accessToken, user } = useAuth();
+  const { userInfo } = useUser();
   const [userDecks, setUserDecks] = useState<DeckInfo[]>([]);
-  const [isCreateDeck, setIsCreateDeck] = useState<boolean>(false)
-  const router = useRouter()
-  const { getDecksList } = useFlashcardDeck()
+  const [isCreateDeck, setIsCreateDeck] = useState<boolean>(false);
+  const router = useRouter();
+  const { getDecksList } = useFlashcardDeck();
 
   const fetchData = async () => {
     try {
       if (userInfo && accessToken) {
         const decks = await getDecksList(userInfo._id, accessToken);
-        console.log("decks: " + JSON.stringify(decks));
-        // Iterate over each deck and fetch deck data
         const decksWithData = await Promise.all(
           decks.map(async (deck: any) => {
             try {
               const deckData = await getDeckData(deck._id, accessToken);
-              return { ...deck, ...deckData }; // Merge deck data with existing deck info
+              return { ...deck, ...deckData };
             } catch (error) {
               console.error(
                 `Error fetching deck data for deck ID ${deck._id}:`,
                 error
               );
-              return deck; // Return original deck info if fetching deck data fails
+              return deck;
             }
           })
         );
-
         setUserDecks(decksWithData);
       }
     } catch (error) {
@@ -54,10 +48,9 @@ const Dashboard: React.FC = () => {
     }
   };
 
-  const deleteSelectedDeck = (deckId: any) => {
-    console.log("deck id: " + JSON.stringify(deckId));
+  const deleteSelectedDeck = async (deckId: any) => {
     try {
-      deleteDeck(deckId, accessToken);
+      await deleteDeck(deckId, accessToken);
       fetchData();
     } catch (error) {
       console.error("Error deleting deck data:", error);
@@ -65,17 +58,10 @@ const Dashboard: React.FC = () => {
   };
 
   useEffect(() => {
-
     if (accessToken && user) {
-      fetchData(); // Fetch user decks on component mount
+      fetchData();
     }
-    console.log("user decks: " + JSON.stringify(userDecks))
-  }, [accessToken, user, isCreateDeck]);
-
-  
-  useEffect(() => {
-    console.log("User decks:", userDecks);
-  }, [userDecks]);
+  }, [accessToken, user]); // Only run when accessToken or user changes
 
   return (
     <div className="flex flex-col min-w-screen min-h-screen items-center mb-20">
@@ -85,16 +71,16 @@ const Dashboard: React.FC = () => {
           Welcome, {user?.firstName}!
           <span className="text-[10px] bg-blue-300">settings</span>
         </h1>
-        <h5 className="mt-3 underline">Logout</h5>
+        <h5 className="mt-3 underline cursor-pointer" onClick={() => router.push('/logout')}>Logout</h5>
 
         {/* nav options */}
         <div className="flex items-center w-full justify-center mt-10">
-        <button
-        className={`px-10 py-2 rounded-lg ${isCreateDeck ? 'bg-red-200 border-red-700' : 'bg-purple-200 border-purple-700'}`}
-        onClick={() => setIsCreateDeck((prevState) => !prevState)}
-      >
-        {isCreateDeck ? "Cancel" : "+ Create New Deck"}
-      </button>
+          <button
+            className={`px-10 py-2 rounded-lg ${isCreateDeck ? 'bg-red-200 border-red-700' : 'bg-purple-200 border-purple-700'}`}
+            onClick={() => setIsCreateDeck((prevState) => !prevState)}
+          >
+            {isCreateDeck ? "Cancel" : "+ Create New Deck"}
+          </button>
         </div>
       </div>
 
@@ -117,7 +103,10 @@ const Dashboard: React.FC = () => {
               </div>
               <div className="flex flex-col gap-6 self-end">
                 <button
-                  onClick={() => deleteSelectedDeck(deckInfo._id)}
+                  onClick={(e) => { 
+                    e.stopPropagation(); // Prevent navigating to the deck when deleting
+                    deleteSelectedDeck(deckInfo._id);
+                  }}
                   className="text-red-600 self-end"
                 >
                   delete
@@ -133,4 +122,4 @@ const Dashboard: React.FC = () => {
   );
 };
 
-export default Dashboard;
+export default withAuth(Dashboard);
