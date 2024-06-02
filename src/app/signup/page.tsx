@@ -1,8 +1,11 @@
 "use client"
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 // import { useRouter } from 'next/navigation';
 import { register } from '@/api/authentication';
-import Navbar from '@/components/Navbar';
+import { useAuth } from "@/context/AuthContext";
+import Navbar from "@/components/Navbar";
+import { useRouter } from "next/navigation";
+
 
 const initialInputValue = {
     firstName: "",
@@ -12,6 +15,9 @@ const initialInputValue = {
   };
 
 const Signup: React.FC = () => {
+    const { user } = useAuth();
+    const router = useRouter()
+
     const [inputValue, setInputValue] = useState({
         firstName: "",
         lastName: "",
@@ -45,16 +51,22 @@ const Signup: React.FC = () => {
         }
     }
 
+    useEffect(() => {
+        if (user) {
+          router.push('/dashboard');
+        }
+      }, [user, router]);
+
     return (
         
         <div className="flex flex-col h-screen w-screen items-center bg-[#FFF2D8]">
             <Navbar/>
             <div className="flex flex-col justify-center items-center h-full w-full">
 
-            <form className="flex h-[500px] flex-col items-center justify-center bg-white w-[400px] rounded border-[1px] border-black" onSubmit={handleSubmit}>
+            <form className="flex h-[500px] flex-col items-center bg-white w-[400px] rounded border-[1px] border-black shadow-xl" onSubmit={handleSubmit}>
 
-                <h2 className="text-2xl my-6">Sign Up</h2>
-                    <div className="flex flex-col items-center justify-center gap-4">
+                <h2 className="text-2xl my-10">Sign Up</h2>
+                    <div className="flex flex-col items-center justify-center gap-6">
                     <input className="py-2 pl-2 rounded border-2 border-gray"
                         type="name"
                         name="firstName"

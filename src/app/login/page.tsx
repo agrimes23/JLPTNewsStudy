@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
 import Navbar from "@/components/Navbar";
 import { useRouter } from "next/navigation";
@@ -13,7 +13,13 @@ const Login: React.FC = () => {
   const [inputValue, setInputValue] = useState(initialInputValue);
   const router = useRouter()
   const { email, password } = inputValue;
-  const { login } = useAuth();
+  const { login, user } = useAuth();
+
+  useEffect(() => {
+    if (user) {
+      router.push('/dashboard');
+    }
+  }, [user, router]);
 
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -43,8 +49,8 @@ const Login: React.FC = () => {
 
 
       <div className="flex flex-col justify-center items-center h-full w-full">
-        <form className="flex h-[500px] flex-col items-center justify-center bg-white w-[400px] gap-10 rounded border-[1px] border-black" onSubmit={handleSubmit}>
-        <h2 className="text-2xl">Login</h2>
+        <form className="flex h-[500px] flex-col items-center bg-white w-[400px] gap-10 rounded border-[1px] border-black shadow-xl" onSubmit={handleSubmit}>
+        <h2 className="text-2xl my-10">Login</h2>
           <input
             className="py-2 pl-2 rounded border-2 border-gray"
             type="email"
