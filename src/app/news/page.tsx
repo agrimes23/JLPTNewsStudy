@@ -8,6 +8,8 @@ import KanjiInfo from '@/components/KanjiInfo';
 const News: React.FC = () => {
   const [articles, setArticles] = useState<any[]>([]);
   const [selectedLevel, setSelectedLevel] = useState<number | null>(5);
+  const [selectedKanji, setSelectedKanji] = useState<any | null>(null);
+  const [modalPosition, setModalPosition] = useState<{ top: number, left: number } | null>(null);
   const storageKey = 'newsArticles';
 
   useEffect(() => {
@@ -45,6 +47,13 @@ const News: React.FC = () => {
     fetchData();
   }, []);
 
+
+  const handleKanjiClick = (kanjiItem: any, event: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
+    setSelectedKanji(kanjiItem);
+    const rect = event.currentTarget.getBoundingClientRect();
+    setModalPosition({ top: rect.bottom, left: rect.left });
+  };
+
   const highlightKanji = (text: string, kanji: any) => {
     if (!text || !kanji || kanji.length === 0 || selectedLevel === null) {
       return text;
@@ -52,10 +61,10 @@ const News: React.FC = () => {
   
     const parts = text.split(new RegExp(`(${kanji.map((item: any) => item.word).join('|')})`, 'g'));
     
-    return parts.map((part: any, index: number) => {
+    return parts.map((part: string, index: number) => {
       const kanjiItem = kanji.find((item: any) => item.word === part && item.level === selectedLevel);
       return kanjiItem ? (
-        <span key={index} className={`underline ${getColorByLevel(kanjiItem.level)}`}>{part}</span>
+        <span key={index} className={`underline ${getColorByLevel(kanjiItem.level)}`} onClick={(e) => handleKanjiClick(kanjiItem, e)}>{part}</span>
       ) : (
         part
       );
@@ -76,6 +85,11 @@ const News: React.FC = () => {
 
   const handleLevelClick = (level: number) => {
     setSelectedLevel(level);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedKanji(null);
+    setModalPosition(null);
   };
 
   return (
@@ -99,6 +113,11 @@ const News: React.FC = () => {
           <p className="text-base my-4">
             {highlightKanji(article.description, article.matchedKanji)}
           </p>
+          {selectedKanji && modalPosition && (
+            <div style={{ position: 'absolute', top: modalPosition.top, left: modalPosition.left }}>
+              <KanjiInfo kanji={selectedKanji.word} level={selectedKanji.level} furigana={selectedKanji.furigana} meaning={selectedKanji.meaning} onClose={handleCloseModal}/>
+            </div>
+          )}
         </div>
       ))}
     </div>
