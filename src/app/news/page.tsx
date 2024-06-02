@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { fetchNewsArticles } from '@/api/newsArticles';
+import KanjiInfo from '@/components/KanjiInfo';
 
 
 const News: React.FC = () => {
@@ -73,13 +74,15 @@ const News: React.FC = () => {
   };
 
   return (
-    <div className="p-4">
+    <div className="flex flex-col items-center min-w-screen p-4">
+          <KanjiInfo />
+
       {articles.map((article, index) => (
-        <div key={index} className="mb-8">
+        <div key={index} className="my-8 w-[600px]">
           <h2 className="text-xl font-bold">
             {highlightKanji(article.title, article.matchedKanji)}
           </h2>
-          <p className="text-base">
+          <p className="text-base my-4">
             {highlightKanji(article.description, article.matchedKanji)}
           </p>
         </div>
