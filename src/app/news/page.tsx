@@ -1,5 +1,5 @@
 "use client"
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { fetchNewsArticles } from '@/api/newsArticles';
 import KanjiInfo from '@/components/KanjiInfo';
@@ -11,6 +11,8 @@ const News: React.FC = () => {
   const [selectedKanji, setSelectedKanji] = useState<any | null>(null);
   const [modalPosition, setModalPosition] = useState<{ top: number, left: number } | null>(null);
   const storageKey = 'newsArticles';
+  const modalRef = useRef<HTMLDivElement>(null);
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -47,11 +49,34 @@ const News: React.FC = () => {
     fetchData();
   }, []);
 
+  const handleScroll = () => {
+    if (selectedKanji && modalPosition && modalRef.current) {
+      const rect = modalRef.current.getBoundingClientRect();
+      const kanjiRect = document.getElementById(selectedKanji.word)?.getBoundingClientRect();
+      if (kanjiRect) {
+        setModalPosition({ top: kanjiRect.bottom + window.pageYOffset, left: kanjiRect.left });
+      }
+    }
+  };
 
   const handleKanjiClick = (kanjiItem: any, event: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
     setSelectedKanji(kanjiItem);
     const rect = event.currentTarget.getBoundingClientRect();
-    setModalPosition({ top: rect.bottom, left: rect.left });
+    const scrollOffset = window.scrollY;
+  
+    // Calculate the position of the modal relative to the viewport
+    const newPosition = { top: rect.bottom + scrollOffset, left: rect.left };
+  
+    // Adjust modal position to ensure it's not covering the clicked word
+    const modalHeight = 200; // Adjust this value as needed
+    const spaceAboveKanji = rect.top - scrollOffset;
+    const spaceBelowKanji = window.innerHeight - spaceAboveKanji - rect.height;
+    let newModalPosition = newPosition;
+    if (spaceBelowKanji < modalHeight) {
+      newModalPosition = { top: rect.top - modalHeight, left: rect.left };
+    }
+  
+    setModalPosition(newModalPosition);
   };
 
   const highlightKanji = (text: string, kanji: any) => {
@@ -64,13 +89,26 @@ const News: React.FC = () => {
     return parts.map((part: string, index: number) => {
       const kanjiItem = kanji.find((item: any) => item.word === part && item.level === selectedLevel);
       return kanjiItem ? (
-        <span key={index} className={`underline ${getColorByLevel(kanjiItem.level)}`} onClick={(e) => handleKanjiClick(kanjiItem, e)}>{part}</span>
-      ) : (
-        part
+        <span
+      key={index}
+      id={kanjiItem.word} // Add id attribute to the span
+      className={`underline ${getColorByLevel(kanjiItem.level)}`}
+      onClick={(e) => handleKanjiClick(kanjiItem, e)}
+    >
+      {part}
+    </span>
+  ) : (
+    part
       );
     });
   };
 
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll);
+    console.log("hello")
+    return () => window.removeEventListener('scroll', handleScroll);
+
+  }, [selectedKanji, modalPosition]);
 
   const getColorByLevel = (level: any) => {
     switch(level) {
@@ -114,7 +152,7 @@ const News: React.FC = () => {
             {highlightKanji(article.description, article.matchedKanji)}
           </p>
           {selectedKanji && modalPosition && (
-            <div style={{ position: 'absolute', top: modalPosition.top, left: modalPosition.left }}>
+            <div ref={modalRef} style={{ position: 'absolute', top: modalPosition.top, left: modalPosition.left }}>
               <KanjiInfo kanji={selectedKanji.word} level={selectedKanji.level} furigana={selectedKanji.furigana} meaning={selectedKanji.meaning} onClose={handleCloseModal}/>
             </div>
           )}
