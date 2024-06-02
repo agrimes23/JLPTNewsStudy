@@ -22,7 +22,7 @@ const KanjiInfo: React.FC<KanjiInfoProps> = ({ kanji, level, furigana, meaning, 
         </div>
         <div className="flex flex-row justify-between ">
           <h3 className="text-sm w-11/12">{meaning}</h3>
-          <h4 className='text-sm w-1/12'>N{level}</h4>
+          <h4 className='text-sm '>(N{level})</h4>
         </div>
       </div>
       <div className="pt-4 text-sm">
