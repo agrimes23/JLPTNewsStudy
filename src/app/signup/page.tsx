@@ -47,52 +47,56 @@ const Signup: React.FC = () => {
 
     return (
         
-        <div className="flex flex-col min-h-screen min-w-screen items-center">
+        <div className="flex flex-col h-screen w-screen items-center bg-[#FFF2D8]">
             <Navbar/>
-            <div className="flex items-center h-screen">
+            <div className="flex flex-col justify-center items-center h-full w-full">
 
-            <form onSubmit={handleSubmit}>
-                <div className="flex flex-col mb-10">
+            <form className="flex h-[500px] flex-col items-center justify-center bg-white w-[400px] rounded border-[1px] border-black" onSubmit={handleSubmit}>
 
-                    <input className=""
+                <h2 className="text-2xl my-6">Sign Up</h2>
+                    <div className="flex flex-col items-center justify-center gap-4">
+                    <input className="py-2 pl-2 rounded border-2 border-gray"
                         type="name"
                         name="firstName"
                         value={firstName}
-                        placeholder="Please enter your first name"
+                        placeholder="First Name"
                         onChange={handleOnChange}
                     />
-                    <input className=""
+                    <input className="py-2 pl-2 rounded border-2 border-gray"
                         type="name"
                         name="lastName"
                         value={lastName}
-                        placeholder="Please enter your last name"
+                        placeholder="Last Name"
                         onChange={handleOnChange}
                     />
-                    <input className=""
+                    <input className="py-2 pl-2 rounded border-2 border-gray"
                         type="email"
                         name="email"
                         value={email}
-                        placeholder="Please enter your email"
+                        placeholder="Email Address"
                         onChange={handleOnChange}
                         required
                     />
                     {/* for email error */}
-                    <div className=""></div>
+                    {/* <div className=""></div> */}
 
-                    <input className=""
+                    <input className="py-2 pl-2 rounded border-2 border-gray"
                         type="password"
                         name="password"
                         value={password}
-                        placeholder="Please enter your password"
+                        placeholder="Password"
                         onChange={handleOnChange}
                         required
                     />
                     {/* for password error */}
-                    <div className=""></div>
+                    {/* <div className=""></div> */}
+                    
+                <button className="flex justfy-center items-center bg-[#113946] w-[230px] justify-center py-2 rounded text-white" type="submit">Sign Up</button>
                 </div>
-                <button className="" type="submit">Sign Up</button><br /><br />
-                <div className="text-center font-input text-lightGray">
-                Already have an account? <a className="underline" href="/login">Login</a>
+                
+                <div className="flex items-center mt-10">
+                <h4 className="font-input text-lightGray">Already have an account?</h4>
+                <a className="underline flex pl-2" href="/login">Login</a>
                 </div>
             </form>
             </div>

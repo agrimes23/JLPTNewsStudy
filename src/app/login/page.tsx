@@ -38,15 +38,15 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen w-screen items-center ">
+    <div className="flex flex-col h-screen w-screen items-center bg-[#FFF2D8]">
       <Navbar />
-        <h2 className="text-center pt-24 h-2/12">Login</h2>
 
 
-      <div className="flex flex-col mt-44 items-center h-full w-full">
-        <form className="flex h-2/5 flex-col items-center justify-center bg-gray-300 w-80 gap-10 rounded border-[2px] border-black" onSubmit={handleSubmit}>
+      <div className="flex flex-col justify-center items-center h-full w-full">
+        <form className="flex h-[500px] flex-col items-center justify-center bg-white w-[400px] gap-10 rounded border-[1px] border-black" onSubmit={handleSubmit}>
+        <h2 className="text-2xl">Login</h2>
           <input
-            className="py-2 pl-2 rounded"
+            className="py-2 pl-2 rounded border-2 border-gray"
             type="email"
             name="email"
             value={email}
@@ -54,16 +54,16 @@ const Login: React.FC = () => {
             placeholder="Email"
           />
           <input
-            className="py-2 pl-2 rounded"
+            className="py-2 pl-2 rounded border-2 border-gray"
             type="password"
             name="password"
             value={password}
             onChange={handleOnChange}
             placeholder="Password"
           />
-          <button className="flex justfy-center items-center bg-purple-400 w-[230px] justify-center py-2 rounded" type="submit">Login</button>
+          <button className="flex justfy-center items-center bg-[#113946] w-[230px] justify-center py-2 rounded text-white" type="submit">Login</button>
           <div className="text-center font-input text-lightGray">
-                New to our app? <a className="underline" href="/login">Login</a>
+                New to our app? <a className="underline" href="/signup">Sign up</a>
           </div>
         </form>
       </div>
