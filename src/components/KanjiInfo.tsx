@@ -1,4 +1,7 @@
-import React from 'react'
+import React, { useState } from 'react'
+import NewDeck from './NewDeck';
+// import { useFlashcardDeck } from '@/context/FlashcardContext';
+
 
 interface KanjiInfoProps {
   kanji: string;
@@ -9,8 +12,11 @@ interface KanjiInfoProps {
 }
 
 const KanjiInfo: React.FC<KanjiInfoProps> = ({ kanji, level, furigana, meaning, onClose }) => {
+  const [openDeckOptions, setOpenDeckOptions] = useState<any>()
+  
   return (
-    <div className="border-2 px-4 py-3 rounded-lg absolute bg-white shadow-sm shadow-gray-300">
+    <div>
+    <div className="border-2 px-4 py-3 rounded-lg absolute bg-white shadow-sm shadow-gray-300 w-[200px]">
        <button className="absolute top-0 right-0 px-2 py-1 text-2xl text-gray-600" onClick={onClose}>✖</button>
       <div>
         
@@ -24,13 +30,9 @@ const KanjiInfo: React.FC<KanjiInfoProps> = ({ kanji, level, furigana, meaning, 
           <h4 className='text-sm '>(N{level})</h4>
         </div>
       </div>
-      <div className="pt-4 text-sm">
-        <h2 className="text-sm">Add to a deck</h2>
-        <select className="border-2 px-5 rounded py-2 mt-2 text-sm">
-          <option value="new-deck">Add to new deck</option>
-          <option value="existing-deck">existing decks...</option>
-        </select>
-      </div>
+      <button className="w-full bg-[#113946] text-white rounded py-2 mt-10" onClick={() => setOpenDeckOptions(!openDeckOptions)}>Add to a deck</button>
+    </div>
+    {openDeckOptions ? <NewDeck /> : <></>}
     </div>
   );
 };

@@ -23,7 +23,7 @@ const CreateDeck = () => {
     };
     
   return (
-    <div className="flex w-[600px] py-8 border-[1px] rounded-lg border-gray-500 justify-between px-8 shadow-lg">
+    <div className="flex w-[600px] py-8 border-[1px] rounded-lg border-gray-500 bg-white justify-between px-8 shadow-lg">
         <form onSubmit={handleSubmit} className="flex flex-col gap-2 self-end">
         <label className="text-[18px] w-[32]">title</label>
         <input type="text" name="title" value={deck.title} placeholder="deck title" onChange={handleChange} />
