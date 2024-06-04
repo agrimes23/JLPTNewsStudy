@@ -70,6 +70,8 @@ const FlashcardDeckProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const createFlashcard = async (deckId: string, flashcard: Flashcard) => {
+    console.log('selected deck id: ' + JSON.stringify(deckId))
+    console.log('flashcard: ' + JSON.stringify(flashcard))
     setDecks(prevDecks =>
       prevDecks.map(deck =>
         deck._id === deckId ? { ...deck, flashcards: [...deck.flashcards, flashcard] } : deck

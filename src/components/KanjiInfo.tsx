@@ -30,9 +30,9 @@ const KanjiInfo: React.FC<KanjiInfoProps> = ({ kanji, level, furigana, meaning, 
           <h4 className='text-sm '>(N{level})</h4>
         </div>
       </div>
-      <button className="w-full bg-[#113946] text-white rounded py-2 mt-10" onClick={() => setOpenDeckOptions(!openDeckOptions)}>Add to a deck</button>
+      <button className="w-full bg-[#113946] text-white rounded py-2 mt-10" onClick={() => setOpenDeckOptions(true)}>Add to a deck</button>
     </div>
-    {openDeckOptions ? <NewDeck /> : <></>}
+    {openDeckOptions ? <NewDeck kanji={kanji} furigana={furigana} meaning={meaning} setOpenDeckOptions={setOpenDeckOptions} onClose={onClose} /> : <></>}
     </div>
   );
 };
