@@ -4,6 +4,7 @@ import { useFlashcardDeck } from "@/context/FlashcardContext";
 import { useAuth } from "@/context/AuthContext";
 import { useUser } from "@/context/UserContext";
 import { getDeckData } from "@/api/flashcardApi";
+import NewsAddFlashcard from "./NewsAddFlashcard";
 
 // TODO: first do just existing decks
 // have new kanji info routed to the new flashcard so the user can edit before saving to a deck
@@ -34,14 +35,12 @@ const NewDeck: React.FC<KanjiProps> = ({
   onClose,
 }) => {
   const { user, accessToken } = useAuth() as AuthContextType;
-  const { getDecksList, createFlashcard } = useFlashcardDeck();
+  const { getDecksList } = useFlashcardDeck();
   const { userInfo } = useUser();
   const [deckList, setDeckList] = useState<Deck[]>([]);
   const [selectedDeck, setSelectedDeck] = useState<string>("");
-  const [frontSide, setFrontSide] = useState<string>(kanji);
-  const [backSide, setBackSide] = useState<string>(
-    `${furigana ? `${furigana} ` : ""}${meaning}`
-  );
+  const [isNewDeck, setIsNewDeck] = useState(false);
+  const [isEditFlashcard, setIsEditFlashcard] = useState(false)
 
   const fetchDeckList = async () => {
     try {
@@ -74,33 +73,22 @@ const NewDeck: React.FC<KanjiProps> = ({
     fetchDeckList();
   }, [user, accessToken]);
 
-  const handleSaveFlashcard = (e: React.FormEvent) => {
+  const { createDeck } = useFlashcardDeck();
+  const [deck, setDeck] = useState<any>({ title: "", description: "" });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setDeck((prevDeck: any) => ({ ...prevDeck, [name]: value }));
+  };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!selectedDeck) {
-      alert("Please select a deck");
-      return;
-    }
-
-    const flashcard = {
-      frontSide,
-      backSide,
-      jlptLevel: "",
-      shouldRetest: true,
-    };
-
-    const requestBody: any = {
-      flashcards: [flashcard],
-    };
-
     try {
-      createFlashcard(selectedDeck, requestBody);
-      setFrontSide("");
-      setBackSide("");
-      setOpenDeckOptions(false);
-      onClose();
+      const response = createDeck(deck);
+      console.log("response from create deck:", response);
     } catch (error) {
-      console.error("Error creating flashcard:", error);
+      console.error("Error creating deck:", error);
     }
   };
 
@@ -117,57 +105,93 @@ const NewDeck: React.FC<KanjiProps> = ({
           >
             ✖
           </button>
-          <div className="flex h-full -mt-6 justify-between flex-col items-center">
+          {isEditFlashcard ?
+
+          <></>
+          :
+          <div className="flex w-full justify-around">
+            <button
+              className={`border-2 border-yellow-400  ${
+                isNewDeck ? "" : "bg-yellow-400"
+              } py-3 w-[200px] rounded`}
+              onClick={() => setIsNewDeck(false)}
+            >
+              Save to existing deck
+            </button>
+            <button
+              className={`border-2 border-green-400 ${
+                isNewDeck ? "bg-green-400" : ""
+              } py-3 w-[200px] rounded`}
+              onClick={() => setIsNewDeck(true)}
+            >
+              Save to new deck
+            </button>
+          </div>
+}
+          <div className="flex w-full h-full mt-20 flex-col items-center">
             {/* choose which deck to save it to */}
-            <div className="flex flex-col my-5">
-              <label htmlFor="deckSelect">Select a deck</label>
-              <select
-                className="border-2 border-gray w-[37vw]"
-                id="deckSelect"
-                value={selectedDeck}
-                onChange={(e) => setSelectedDeck(e.target.value)}
-              >
-                <option value="" disabled>
-                  Select a deck
-                </option>
-                {deckList.map((deck) => (
-                  <option key={deck._id} value={deck._id}>
-                    {deck.title}
+            {isEditFlashcard ? (
+              <NewsAddFlashcard
+                kanji={kanji}
+                furigana={furigana}
+                meaning={meaning}
+                onClose={onClose}
+                selectedDeck={selectedDeck}
+                setOpenDeckOptions={setOpenDeckOptions}
+              />
+            ) :
+            isNewDeck ? (
+              <form onSubmit={handleSubmit} className="flex flex-col w-80 h-full gap-8">
+                <div className="flex flex-col">
+                  <label className="text-[18px] w-[32]">title</label>
+                  <input
+                    className="border border-black py-1 pl-2 rounded mt-4"
+                    type="text"
+                    name="title"
+                    value={deck.title}
+                    placeholder="deck title"
+                    onChange={handleChange}
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <label className="text-[18px] w-[32]">description</label>
+                  <input
+                    className="border border-black py-1 pl-2 rounded mt-4"
+                    type="text"
+                    name="description"
+                    value={deck.description}
+                    placeholder="deck description"
+                    onChange={handleChange}
+                  />
+                </div>
+                <div className="flex flex-col justify-center h-full">
+                  <button className="bg-blue-800 text-white py-2 rounded" type="submit">Create New Deck and Continue</button>
+                </div>
+              </form>
+            ) : (
+              <div className="flex flex-col h-full my-5">
+                <label htmlFor="deckSelect">Select a deck</label>
+                <select
+                  className="border-2 border-gray w-[37vw]"
+                  id="deckSelect"
+                  value={selectedDeck}
+                  onChange={(e) => setSelectedDeck(e.target.value)}
+                >
+                  <option value="" disabled>
+                    Select a deck
                   </option>
-                ))}
-              </select>
-            </div>
-            {/* edit flashcard before saving */}
+                  {deckList.map((deck) => (
+                    <option key={deck._id} value={deck._id}>
+                      {deck.title}
+                    </option>
+                  ))}
+                </select>
+                <div className="flex flex-col h-full justify-center">
+                  <button onClick={() => setIsEditFlashcard(true)} className="bg-[#113946] text-white py-2 rounded w-">Continue</button>
+                </div>
+              </div>
+            )}
 
-            <form action="" className="flex items-center flex-col">
-              <label htmlFor="">Front Side</label>
-              {/* kanji */}
-              <textarea
-                name="front side"
-                value={frontSide}
-                placeholder="front side"
-                className="rounded p-2 h-32 w-72 resize-none border-2 border-gray"
-                maxLength={50}
-                onChange={(e) => setFrontSide(e.target.value)}
-              />
-              <label htmlFor="">Back Side</label>
-              {/* furigana (if applicable), meaning */}
-              <textarea
-                name="back side"
-                value={backSide}
-                placeholder="back side"
-                className="rounded p-2 h-32 w-72 resize-none border-2 border-gray"
-                maxLength={50}
-                onChange={(e) => setBackSide(e.target.value)}
-              />
-
-              <button
-                className="bg-[#113946] text-white w-[30vw] py-3 my-10  rounded"
-                onClick={handleSaveFlashcard}
-              >
-                Save to Deck
-              </button>
-            </form>
           </div>
         </div>
       </div>
