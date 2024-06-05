@@ -83,6 +83,9 @@ export const createDeckApi = async (userId: string, token: any, newDeck: any) =>
 
 
 export const createFlashCardApi = async (deckId: string, token: any, newFlashcard: any) => {
+  console.log("deckid: " + JSON.stringify(deckId))
+  console.log("tokne: " + JSON.stringify(token))
+  console.log("new flashcard: " + JSON.stringify(newFlashcard))
   try {
     const response = await axios.post(`http://localhost:8080/deck/${deckId}/flashcards`, newFlashcard, {
       headers: {
@@ -90,8 +93,8 @@ export const createFlashCardApi = async (deckId: string, token: any, newFlashcar
       },
       withCredentials: true,
     });
-    console.log("response data in adding new flashcard in deck: " + JSON.stringify(response.data))
-    return response.data;
+    console.log("response data in adding new flashcard in deck: " + JSON.stringify(response))
+    return response;
   } catch (error) {
     console.log("error with add new flashcard to deck: " + JSON.stringify(error));
   }

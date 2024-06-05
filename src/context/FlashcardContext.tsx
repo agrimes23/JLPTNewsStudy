@@ -54,6 +54,7 @@ const FlashcardDeckProvider = ({ children }: { children: ReactNode }) => {
     if (user && accessToken) {
       const response: any = await createDeckApi(user._id, accessToken, deck)
       console.log("response from create deck: " + JSON.stringify(response))
+      return response
     }
 
   };
@@ -78,6 +79,7 @@ const FlashcardDeckProvider = ({ children }: { children: ReactNode }) => {
       )
     );
     const response = await createFlashCardApi(deckId, accessToken, flashcard)
+    console.log("resopnse in flashcard context; " + JSON.stringify(response))
   };
 
   const editFlashcard = async (deckId: string, flashcardId: string, updatedFlashcard: Partial<Flashcard>) => {

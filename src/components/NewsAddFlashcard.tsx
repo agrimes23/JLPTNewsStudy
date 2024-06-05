@@ -27,7 +27,7 @@ const NewsAddFlashcard: React.FC<KanjiProps> = ({
       `${furigana ? `${furigana} ` : ""}${meaning}`
     );
 
-    const handleSaveFlashcard = (e: React.FormEvent) => {
+    const handleSaveFlashcard = async (e: React.FormEvent) => {
         e.preventDefault();
     
         if (!selectedDeck) {
@@ -46,8 +46,9 @@ const NewsAddFlashcard: React.FC<KanjiProps> = ({
           flashcards: [flashcard],
         };
     
+        console.log("selectedDeck from news add flashcard component: " + JSON.stringify(selectedDeck))
         try {
-          createFlashcard(selectedDeck, requestBody);
+          await createFlashcard(selectedDeck, requestBody);
           setFrontSide("");
           setBackSide("");
           setOpenDeckOptions(false);
@@ -57,10 +58,14 @@ const NewsAddFlashcard: React.FC<KanjiProps> = ({
         }
       };
 
+      useEffect(() => {
+        console.log("selected deck: " + JSON.stringify(selectedDeck))
+      }, [])
+
 
   return (
     <div>
-        <form action="" className="flex items-center flex-col">
+        <form onSubmit={handleSaveFlashcard} action="" className="flex items-center flex-col">
               <label htmlFor="">Front Side</label>
               {/* kanji */}
               <textarea
@@ -83,8 +88,8 @@ const NewsAddFlashcard: React.FC<KanjiProps> = ({
               />
 
               <button
+                type="submit"
                 className="bg-[#113946] text-white w-[30vw] py-3 my-10  rounded"
-                onClick={handleSaveFlashcard}
               >
                 Save to Deck
               </button>

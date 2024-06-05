@@ -35,7 +35,7 @@ const NewDeck: React.FC<KanjiProps> = ({
   onClose,
 }) => {
   const { user, accessToken } = useAuth() as AuthContextType;
-  const { getDecksList } = useFlashcardDeck();
+  const { getDecksList, createDeck } = useFlashcardDeck();
   const { userInfo } = useUser();
   const [deckList, setDeckList] = useState<Deck[]>([]);
   const [selectedDeck, setSelectedDeck] = useState<string>("");
@@ -73,7 +73,6 @@ const NewDeck: React.FC<KanjiProps> = ({
     fetchDeckList();
   }, [user, accessToken]);
 
-  const { createDeck } = useFlashcardDeck();
   const [deck, setDeck] = useState<any>({ title: "", description: "" });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -81,17 +80,29 @@ const NewDeck: React.FC<KanjiProps> = ({
     setDeck((prevDeck: any) => ({ ...prevDeck, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     try {
-      const response = createDeck(deck);
+      const response: any = await createDeck(deck);
+      fetchDeckList()
       console.log("response from create deck:", response);
+      setSelectedDeck(response._id); // set the new deck ID as selected
+      setIsEditFlashcard(true);
     } catch (error) {
       console.error("Error creating deck:", error);
     }
   };
-
+  // Received request to add flashcards to deckId: 663e5dfd402e9ee4710890f5
+  // Request body: [
+  //   {
+  //     frontSide: '検査',
+  //     backSide: 'けんさ inspection (e.g. customs, factory), examination',
+  //     jlptLevel: '',
+  //     shouldRetest: true
+  //   }
+  // ]
+  // Updated deck: null
   return (
     <div className="fixed top-0 left-0 w-screen h-screen bg-gray-300 bg-opacity-70 ">
       <div className="flex items-center justify-center h-full">
