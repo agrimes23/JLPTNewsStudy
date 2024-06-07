@@ -15,7 +15,8 @@ const EditDeck: React.FC<EditDeckProps> = ({ deck, onClose }) => {
   const [description, setDescription] = useState(deck.description);
   const { editDeck } = useFlashcardDeck();
 
-  const handleSave = async () => {
+  const handleSave = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
     try {
       await editDeck(deck._id, { title, description });
       onClose();
