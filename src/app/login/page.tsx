@@ -3,6 +3,8 @@ import React, { useState, useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
 import Navbar from "@/components/Navbar";
 import { useRouter } from "next/navigation";
+import { useNavigation } from '@/context/NavigationContext';
+
 
 const initialInputValue = {
   email: "",
@@ -14,12 +16,7 @@ const Login: React.FC = () => {
   const router = useRouter()
   const { email, password } = inputValue;
   const { login, user } = useAuth();
-
-  useEffect(() => {
-    if (user) {
-      router.push('/dashboard');
-    }
-  }, [user, router]);
+  const { previousLocation } = useNavigation();
 
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -34,9 +31,10 @@ const Login: React.FC = () => {
     e.preventDefault();
     try {
       const data = await login(email, password);
+      console.log('previous locatoin: ' + JSON.stringify(previousLocation))
       // Handle successful login
       setInputValue(initialInputValue);
-      router.push('/dashboard');
+      router.push(previousLocation === '/' ? '/dashboard' : previousLocation);
     } catch (error: any) {
       // Handle login error
       console.error("Login error oops: ", error.message);

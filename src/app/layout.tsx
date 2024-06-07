@@ -4,6 +4,7 @@ import "./globals.css";
 import { AuthProvider } from "@/context/AuthContext";
 import { UserProvider } from "@/context/UserContext";
 import { FlashcardDeckProvider } from "@/context/FlashcardContext";
+import { NavigationProvider } from "@/context/NavigationContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,15 +20,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      
       <body className={inter.className}>
-      <AuthProvider>
-        <UserProvider>
-          <FlashcardDeckProvider>
-        {children}
-        </FlashcardDeckProvider>
-        </UserProvider>
-      </AuthProvider>
+        <AuthProvider>
+          <UserProvider>
+            <FlashcardDeckProvider>
+              <NavigationProvider>{children}</NavigationProvider>
+            </FlashcardDeckProvider>
+          </UserProvider>
+        </AuthProvider>
       </body>
     </html>
   );

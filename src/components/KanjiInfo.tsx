@@ -3,6 +3,7 @@ import NewDeck from './NewDeck';
 import { useAuth } from '@/context/AuthContext';
 // import { useFlashcardDeck } from '@/context/FlashcardContext';
 import { useRouter } from 'next/navigation'
+import { useNavigation } from '@/context/NavigationContext';
 
 interface KanjiInfoProps {
   kanji: string;
@@ -15,8 +16,21 @@ interface KanjiInfoProps {
 const KanjiInfo: React.FC<KanjiInfoProps> = ({ kanji, level, furigana, meaning, onClose }) => {
   const [openDeckOptions, setOpenDeckOptions] = useState<any>()
   const { accessToken } = useAuth()
-  const router = useRouter()
+  const router: any = useRouter()
+  const { setPreviousLocation } = useNavigation();
+ 
   
+  const handleLogin = () => {
+    setPreviousLocation("/news");
+    router.push('/login');
+  };
+
+  const handleSignup = () => {
+    setPreviousLocation("/news");
+    router.push('/signup');
+  };
+
+
   return (
     <div>
     <div className="border-2 px-4 py-3 rounded-lg absolute bg-white shadow-sm shadow-gray-300 w-[200px]">
@@ -39,9 +53,9 @@ const KanjiInfo: React.FC<KanjiInfoProps> = ({ kanji, level, furigana, meaning, 
           <button className="w-full bg-[#113946] text-white rounded py-2 mt-10" onClick={() => setOpenDeckOptions(true)}>Add to a deck</button>
           :
           <div className="flex w-full gap-4 justify-center mt-5">
-            <button onClick={() => router.push('/login')} className="border-2 border-[#1f657c] hover:bg-[#2bb6e4] hover:bg-opacity-20 rounded px-2 py-1">Login</button>
+            <button onClick={handleLogin} className="border-2 border-[#1f657c] hover:bg-[#2bb6e4] hover:bg-opacity-20 rounded px-2 py-1">Login</button>
             
-            <button onClick={() => router.push('/signup')} className="border-2 border-[#e4c124] hover:bg-[#e4c124] hover:bg-opacity-20 rounded px-2 py-1">Sign Up</button>
+            <button onClick={handleSignup} className="border-2 border-[#e4c124] hover:bg-[#e4c124] hover:bg-opacity-20 rounded px-2 py-1">Sign Up</button>
           </div>
         }
       </div>
