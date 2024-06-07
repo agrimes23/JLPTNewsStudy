@@ -93,16 +93,7 @@ const NewDeck: React.FC<KanjiProps> = ({
       console.error("Error creating deck:", error);
     }
   };
-  // Received request to add flashcards to deckId: 663e5dfd402e9ee4710890f5
-  // Request body: [
-  //   {
-  //     frontSide: '検査',
-  //     backSide: 'けんさ inspection (e.g. customs, factory), examination',
-  //     jlptLevel: '',
-  //     shouldRetest: true
-  //   }
-  // ]
-  // Updated deck: null
+
   return (
     <div className="fixed top-0 left-0 w-screen h-screen bg-gray-300 bg-opacity-70 ">
       <div className="flex items-center justify-center h-full">

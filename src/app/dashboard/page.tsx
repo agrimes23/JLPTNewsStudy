@@ -5,6 +5,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useUser } from "@/context/UserContext";
 import { useFlashcardDeck } from "@/context/FlashcardContext";
 import CreateDeck from "@/components/CreateDeck";
+import EditDeck from "@/components/EditDeck";
 import { useRouter } from "next/navigation";
 import withAuth from '@/hoc/withAuth';
 
@@ -21,6 +22,8 @@ const Dashboard: React.FC = () => {
   const [userDecks, setUserDecks] = useState<DeckInfo[]>([]);
   const [isCreateDeck, setIsCreateDeck] = useState<boolean>(false);
   const router = useRouter();
+  const [editingDeckId, setEditingDeckId] = useState<string | null>(null);
+
   const { getDecksList } = useFlashcardDeck();
 
   const fetchData = async () => {
@@ -57,6 +60,14 @@ const Dashboard: React.FC = () => {
     }
   };
 
+  const updateSelectedDeckInfo = async (deckId: string) => {
+    try {
+
+    } catch(err) {
+      console.error("error in updating deck info from dashboard page: ", err)
+    }
+  }
+
   useEffect(() => {
     if (accessToken && user) {
       fetchData();
@@ -88,35 +99,58 @@ const Dashboard: React.FC = () => {
       <div className="flex flex-col w-[100%] h-[100%] items-center gap-14">
         {/* Deck Info Card */}
         {userDecks.map((deckInfo: DeckInfo, index: number) => {
-          return (
-            <div
-              key={index}
-              className="flex w-[600px] py-8 border-[1px] rounded-lg border-gray-500 justify-between px-8 shadow-lg hover:bg-yellow-100 hover:border-black cursor-pointer" onClick={() => router.push(`/deck/${deckInfo._id}`)}
-            >
-              <div className="flex flex-col gap-6 self-end ">
-                <h3 className="text-[22px] group-hover:underline">{deckInfo.title}</h3>
-                <p>{deckInfo.description}</p>
+          if (editingDeckId === deckInfo._id) {
+            return (
+              <EditDeck
+                key={deckInfo._id}
+                deck={deckInfo}
+                onClose={() => {
+                  setEditingDeckId(null);
+                  fetchData();
+                }}
+              />
+            );
+          } else {
+            return (
+              <div
+                key={deckInfo._id}
+                className="flex w-[600px] py-8 border-[1px] rounded-lg border-gray-500 justify-between px-8 shadow-lg hover:bg-yellow-100 hover:border-black cursor-pointer"
+                onClick={() => router.push(`/deck/${deckInfo._id}`)}
+              >
+                <div className="flex flex-col gap-6 self-end ">
+                  <h3 className="text-[22px] group-hover:underline">{deckInfo.title}</h3>
+                  <p>{deckInfo.description}</p>
+                </div>
+                <div className="flex flex-col gap-6 self-end">
+                  <p>-------jlpt kanji level bar-------</p>
+                  <p className="self-end">{deckInfo.modifiedDate}</p>
+                </div>
+                <div className="flex flex-col gap-6 self-end">
+                  <button
+                    onClick={(e) => { 
+                      e.stopPropagation(); // Prevent navigating to the deck when deleting
+                      deleteSelectedDeck(deckInfo._id);
+                    }}
+                    className="text-red-600 self-end"
+                  >
+                    delete
+                  </button>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation(); // Prevent navigating to the deck when editing
+                      setEditingDeckId(deckInfo._id);
+                    }}
+                    className="text-blue-600 self-end"
+                  >
+                    edit
+                  </button>
+                </div>
               </div>
-              <div className="flex flex-col gap-6 self-end">
-                <p>-------jlpt kanji level bar-------</p>
-                <p className="self-end">{deckInfo.modifiedDate}</p>
-              </div>
-              <div className="flex flex-col gap-6 self-end">
-                <button
-                  onClick={(e) => { 
-                    e.stopPropagation(); // Prevent navigating to the deck when deleting
-                    deleteSelectedDeck(deckInfo._id);
-                  }}
-                  className="text-red-600 self-end"
-                >
-                  delete
-                </button>
-                <button className="text-blue-600 self-end">edit</button>
-              </div>
-            </div>
-          );
+            );
+          }
         })}
         {isCreateDeck && <CreateDeck />}
+        
       </div>
     </div>
   );

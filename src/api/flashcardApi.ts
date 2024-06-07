@@ -81,6 +81,20 @@ export const createDeckApi = async (userId: string, token: any, newDeck: any) =>
   }
 };
 
+export const editDeckInfoApi = async (deckId: string, token: any, updatedDeckInfo: any) => {
+  try {
+    const response = await axios.put(`http://localhost:8080/deck/${deckId}`, updatedDeckInfo, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      withCredentials: true,
+    });
+
+  } catch (err) {
+    console.log("error with editing deck info: " + JSON.stringify(err));
+  }
+}
+
 
 export const createFlashCardApi = async (deckId: string, token: any, newFlashcard: any) => {
   console.log("deckid: " + JSON.stringify(deckId))

@@ -1,6 +1,6 @@
 "use client"
 import React, { createContext, useContext, useState, ReactNode } from 'react';
-import { createDeckApi, getUserDecks, createFlashCardApi, getDeckData, deleteFlashcardApi, editFlashcardApi } from '@/api/flashcardApi';
+import { createDeckApi, getUserDecks, createFlashCardApi, getDeckData, deleteFlashcardApi, editFlashcardApi, editDeckInfoApi } from '@/api/flashcardApi';
 import { useAuth } from './AuthContext';
 
 // Define the shape of deck and flashcard data
@@ -14,7 +14,7 @@ interface Flashcard {
 
 interface Deck {
   _id: string;
-  name: string;
+  title: string;
   description: string;
   flashcards: Flashcard[];
 }
@@ -59,10 +59,14 @@ const FlashcardDeckProvider = ({ children }: { children: ReactNode }) => {
 
   };
 
-  const editDeck = (deckId: string, updatedDeck: Partial<Deck>) => {
+  const editDeck = async (deckId: string, updatedDeck: Partial<Deck>) => {
     setDecks(prevDecks =>
       prevDecks.map(deck => (deck._id === deckId ? { ...deck, ...updatedDeck } : deck))
     );
+
+    const response: any = await editDeckInfoApi(deckId, accessToken, updatedDeck)
+    console.log("Edit deck info repsonse: " + JSON.stringify(response))
+
   };
 
   const deleteDeck = (deckId: string) => {
