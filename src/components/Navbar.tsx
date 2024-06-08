@@ -91,10 +91,10 @@ const Navbar = () => {
         animate={isOpen ? "open" : "closed"}
       >
         <div className="flex w-full justify-between">
-          <div className="px-10 text-center">
+          <button onClick={() => router.push("/")} className="px-10 text-center">
             <h1 className="text-3xl">JLPT News Study</h1>
             <h3>日本語能力試験のニューズ勉強</h3>
-          </div>
+          </button>
 
           {accessToken ? (
             <div className="flex gap-5 items-center px-10">
