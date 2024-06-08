@@ -126,8 +126,8 @@ const FlashcardDeckProvider = ({ children }: { children: ReactNode }) => {
     try {
       const decksList = await getUserDecks(userId, accessToken);
       setDecks(decksList)
-      console.log("ahh decks: " + JSON.stringify(decks))
-      console.log("ahh decksList: " + JSON.stringify(decksList))
+      // console.log("ahh decks: " + JSON.stringify(decks))
+      // console.log("ahh decksList: " + JSON.stringify(decksList))
 
       return decksList
     } catch (error) {

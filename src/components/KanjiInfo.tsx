@@ -10,10 +10,11 @@ interface KanjiInfoProps {
   level: number;
   furigana?: string;
   meaning: string;
+  jlptLevel: string;
   onClose: any;
 }
 
-const KanjiInfo: React.FC<KanjiInfoProps> = ({ kanji, level, furigana, meaning, onClose }) => {
+const KanjiInfo: React.FC<KanjiInfoProps> = ({ kanji, level, furigana, meaning, jlptLevel, onClose }) => {
   const [openDeckOptions, setOpenDeckOptions] = useState<any>()
   const { accessToken } = useAuth()
   const router: any = useRouter()
@@ -60,7 +61,7 @@ const KanjiInfo: React.FC<KanjiInfoProps> = ({ kanji, level, furigana, meaning, 
         }
       </div>
     </div>
-    {openDeckOptions ? <NewDeck kanji={kanji} furigana={furigana} meaning={meaning} setOpenDeckOptions={setOpenDeckOptions} onClose={onClose} /> : <></>}
+    {openDeckOptions ? <NewDeck kanji={kanji} furigana={furigana} meaning={meaning} setOpenDeckOptions={setOpenDeckOptions} jlptLevel={jlptLevel} onClose={onClose} /> : <></>}
     </div>
   );
 };

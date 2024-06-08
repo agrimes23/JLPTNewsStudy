@@ -27,7 +27,6 @@ export const getUserDecks = async (id: string, accessToken:any) => {
       withCredentials: true,
     });
   
-    console.log(`response.data: ${JSON.stringify(response.data)}`);
     return response.data;
   };
 
@@ -74,7 +73,6 @@ export const createDeckApi = async (userId: string, token: any, newDeck: any) =>
       },
       withCredentials: true,
     });
-    console.log("response data in creating deck: " + JSON.stringify(response.data))
     return response.data;
   } catch (error) {
     console.log("error with creating deck: " + JSON.stringify(error));
@@ -97,9 +95,6 @@ export const editDeckInfoApi = async (deckId: string, token: any, updatedDeckInf
 
 
 export const createFlashCardApi = async (deckId: string, token: any, newFlashcard: any) => {
-  console.log("deckid: " + JSON.stringify(deckId))
-  console.log("tokne: " + JSON.stringify(token))
-  console.log("new flashcard: " + JSON.stringify(newFlashcard))
   try {
     const response = await axios.post(`http://localhost:8080/deck/${deckId}/flashcards`, newFlashcard, {
       headers: {
@@ -107,7 +102,7 @@ export const createFlashCardApi = async (deckId: string, token: any, newFlashcar
       },
       withCredentials: true,
     });
-    console.log("response data in adding new flashcard in deck: " + JSON.stringify(response))
+
     return response;
   } catch (error) {
     console.log("error with add new flashcard to deck: " + JSON.stringify(error));

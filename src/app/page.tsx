@@ -6,9 +6,11 @@ import Carousel from '@/components/Carousel'
 import ExplainNewsStudy from '@/components/ExplainNewsStudy'
 import ExplainAllKanji from '@/components/ExplainAllKanji'
 import Footer from '@/components/Footer'
+import { useRouter } from 'next/navigation'
+
 
 const HomePage: React.FC = () => {
-
+    const router: any = useRouter()
 
   return (
     <main className="flex flex-col min-w-screen min-h-screen">
@@ -28,8 +30,9 @@ const HomePage: React.FC = () => {
                     <p>漢字の読む方を学ぶ</p>
                 </h3>
                 <div className="mt-10 flex w-[100%] justify-center">
-                    <button className="flex px-10 py-4 bg-yellow-500 rounded-lg">
-                        Get Started {"->"}
+                    <button className="flex px-10 py-4 bg-yellow-500 rounded-lg"
+                    onClick={() => router.push("/news")}>
+                        Check out the news {"->"}
                     </button>
                 </div>
             </div>

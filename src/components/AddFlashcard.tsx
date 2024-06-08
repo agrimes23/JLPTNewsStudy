@@ -5,6 +5,7 @@ import { useFlashcardDeck } from '@/context/FlashcardContext';
 const AddFlashcard = () => {
   const [frontSide, setFrontSide] = useState('');
   const [backSide, setBackSide] = useState('');
+  const [jlptLevel, setJlptLevel] = useState('');
   const deckId: any = useParams()
 
 
@@ -13,11 +14,11 @@ const AddFlashcard = () => {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-
+    console.log("jlpt level??:  " + JSON.stringify(jlptLevel))
     const flashcard = {
       frontSide,
       backSide,
-      jlptLevel: '',
+      jlptLevel,
       shouldRetest: true,
     };
 
@@ -29,6 +30,7 @@ const AddFlashcard = () => {
       await createFlashcard(deckId.id, requestBody);
       setFrontSide('');
       setBackSide('');
+      setJlptLevel('')
     } catch (error) {
       console.error('Error creating flashcard:', error);
     }
@@ -45,7 +47,7 @@ const AddFlashcard = () => {
           <h3 className="w-[50%] text-center text-gray-400">Back</h3>
         </div>
         <div className="flex border-2 w-[800px] h-[350px] bg-white rounded-lg shadow-lg">
-          <div className="flex w-[50%] h-full items-center justify-center border-r-[1px]">
+          <div className="flex flex-col w-[50%] h-full items-center justify-center border-r-[1px]">
           <textarea
               name="frontSide"
               value={frontSide}
@@ -53,7 +55,9 @@ const AddFlashcard = () => {
               className="rounded p-2 h-32 w-72 resize-none text-center"
               maxLength={50}
               onChange={(e) => setFrontSide(e.target.value)}
+              required
             />
+            <input type="text" placeholder="JLPT Level (eg N1, N2, N3, N4, N5)" value={jlptLevel} className="w-72 py-2 pl-2 mt-5" onChange={(e) => setJlptLevel(e.target.value)} required/>
           </div>
           
           <div className="flex w-[50%] h-full items-center justify-center border-l-[1px]">

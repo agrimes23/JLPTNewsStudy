@@ -48,7 +48,6 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
       });
       // Extract the new access token from the response
       const { accessToken } = response.data;
-      console.log("access token refresh: " + JSON.stringify(accessToken));
 
       // Update the access token in state
       setAccessToken(accessToken);

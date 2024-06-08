@@ -60,6 +60,7 @@ const News: React.FC = () => {
   };
 
   const handleKanjiClick = (kanjiItem: any, event: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
+    console.log("kanji item: " + JSON.stringify(kanjiItem))
     setSelectedKanji(kanjiItem);
     const rect = event.currentTarget.getBoundingClientRect();
     const scrollOffset = window.scrollY;
@@ -153,7 +154,7 @@ const News: React.FC = () => {
           </p>
           {selectedKanji && modalPosition && (
             <div ref={modalRef} style={{ position: 'absolute', top: modalPosition.top, left: modalPosition.left }}>
-              <KanjiInfo kanji={selectedKanji.word} level={selectedKanji.level} furigana={selectedKanji.furigana} meaning={selectedKanji.meaning} onClose={handleCloseModal}/>
+              <KanjiInfo kanji={selectedKanji.word} level={selectedKanji.level} furigana={selectedKanji.furigana} meaning={selectedKanji.meaning} jlptLevel={selectedKanji.level} onClose={handleCloseModal}/>
             </div>
           )}
         </div>

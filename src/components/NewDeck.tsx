@@ -14,6 +14,7 @@ interface KanjiProps {
   furigana?: string;
   meaning: string;
   setOpenDeckOptions: any;
+  jlptLevel: string;
   onClose: any;
 }
 
@@ -32,6 +33,7 @@ const NewDeck: React.FC<KanjiProps> = ({
   furigana,
   meaning,
   setOpenDeckOptions,
+  jlptLevel,
   onClose,
 }) => {
   const { user, accessToken } = useAuth() as AuthContextType;
@@ -68,7 +70,7 @@ const NewDeck: React.FC<KanjiProps> = ({
   };
 
   useEffect(() => {
-    console.log("heleooo");
+    console.log("jlpt level: " + JSON.stringify(jlptLevel));
     console.log("decks: " + JSON.stringify(deckList));
     fetchDeckList();
   }, [user, accessToken]);
@@ -138,6 +140,7 @@ const NewDeck: React.FC<KanjiProps> = ({
                 furigana={furigana}
                 meaning={meaning}
                 onClose={onClose}
+                jlptLevel={jlptLevel}
                 selectedDeck={selectedDeck}
                 setOpenDeckOptions={setOpenDeckOptions}
               />

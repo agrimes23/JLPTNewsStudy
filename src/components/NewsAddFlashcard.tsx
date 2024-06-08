@@ -9,6 +9,7 @@ interface KanjiProps {
     meaning: string;
     selectedDeck: any;
     onClose: any;
+    jlptLevel: string;
     setOpenDeckOptions: any;
   }
 
@@ -19,6 +20,7 @@ const NewsAddFlashcard: React.FC<KanjiProps> = ({
     meaning,
     selectedDeck,
     onClose,
+    jlptLevel,
     setOpenDeckOptions
   }) => {
     const { createFlashcard } = useFlashcardDeck();
@@ -34,11 +36,12 @@ const NewsAddFlashcard: React.FC<KanjiProps> = ({
           alert("Please select a deck");
           return;
         }
+        console.log("jlpt level in news add flashcard: " + JSON.stringify(jlptLevel))
     
         const flashcard = {
           frontSide,
           backSide,
-          jlptLevel: "",
+          jlptLevel,
           shouldRetest: true,
         };
     

@@ -8,6 +8,7 @@ import CreateDeck from "@/components/CreateDeck";
 import EditDeck from "@/components/EditDeck";
 import { useRouter } from "next/navigation";
 import withAuth from '@/hoc/withAuth';
+import KanjiLevelBar from '@/components/KanjiLevelBar'
 
 interface DeckInfo {
   _id: any;
@@ -17,7 +18,7 @@ interface DeckInfo {
 }
 
 const Dashboard: React.FC = () => {
-  const { accessToken, user } = useAuth();
+  const { accessToken, user, logout } = useAuth();
   const { userInfo } = useUser();
   const [userDecks, setUserDecks] = useState<DeckInfo[]>([]);
   const [isCreateDeck, setIsCreateDeck] = useState<boolean>(false);
@@ -60,13 +61,6 @@ const Dashboard: React.FC = () => {
     }
   };
 
-  const updateSelectedDeckInfo = async (deckId: string) => {
-    try {
-
-    } catch(err) {
-      console.error("error in updating deck info from dashboard page: ", err)
-    }
-  }
 
   useEffect(() => {
     if (accessToken && user) {
@@ -82,12 +76,24 @@ const Dashboard: React.FC = () => {
           Welcome, {user?.firstName}!
           <span className="text-[10px] bg-blue-300">settings</span>
         </h1>
-        <h5 className="mt-3 underline cursor-pointer" onClick={() => router.push('/logout')}>Logout</h5>
+        <button
+          className="mt-3 underline cursor-pointer"
+          onClick={() => {
+            router.push("/");
+            logout()
+          }}
+        >
+          Logout
+        </button>
 
         {/* nav options */}
         <div className="flex items-center w-full justify-center mt-10">
           <button
-            className={`px-10 py-2 rounded-lg ${isCreateDeck ? 'bg-red-200 border-red-700' : 'bg-purple-200 border-purple-700'}`}
+            className={`px-10 py-2 rounded-lg ${
+              isCreateDeck
+                ? "bg-red-200 border-red-700"
+                : "bg-purple-200 border-purple-700"
+            }`}
             onClick={() => setIsCreateDeck((prevState) => !prevState)}
           >
             {isCreateDeck ? "Cancel" : "+ Create New Deck"}
@@ -117,17 +123,19 @@ const Dashboard: React.FC = () => {
                 className="flex w-[600px] py-8 border-[1px] rounded-lg border-gray-500 justify-between px-8 shadow-lg hover:bg-yellow-100 hover:border-black cursor-pointer"
                 onClick={() => router.push(`/deck/${deckInfo._id}`)}
               >
-                <div className="flex flex-col gap-6 self-end ">
-                  <h3 className="text-[22px] group-hover:underline">{deckInfo.title}</h3>
+                <div className="flex flex-col gap-6 self-end w-[200px] ">
+                  <h3 className="text-[22px] group-hover:underline">
+                    {deckInfo.title}
+                  </h3>
                   <p>{deckInfo.description}</p>
                 </div>
                 <div className="flex flex-col gap-6 self-end">
-                  <p>-------jlpt kanji level bar-------</p>
+                <KanjiLevelBar deckId={deckInfo._id} />
                   <p className="self-end">{deckInfo.modifiedDate}</p>
                 </div>
                 <div className="flex flex-col gap-6 self-end">
                   <button
-                    onClick={(e) => { 
+                    onClick={(e) => {
                       e.stopPropagation(); // Prevent navigating to the deck when deleting
                       deleteSelectedDeck(deckInfo._id);
                     }}
@@ -150,7 +158,6 @@ const Dashboard: React.FC = () => {
           }
         })}
         {isCreateDeck && <CreateDeck />}
-        
       </div>
     </div>
   );
