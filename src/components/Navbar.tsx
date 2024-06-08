@@ -1,11 +1,14 @@
 "use client"
 import React, { useState } from 'react'
 import { motion } from 'framer-motion'
-
+import { useRouter } from 'next/navigation'
+import { useNavigation } from '@/context/NavigationContext';
 
 const Navbar = () => {
 
     const [isOpen, setIsOpen] = useState(false)
+    const router: any = useRouter()
+    const { setPreviousLocation } = useNavigation();
 
     const variants = {
         initial: {
@@ -68,13 +71,30 @@ const Navbar = () => {
         "Sign Up"
     ]
 
+    const handleLogin = () => {
+      setPreviousLocation("/news");
+      router.push('/login');
+    };
 
+    const handleSignup = () => {
+      setPreviousLocation("/news");
+      router.push('/signup');
+    };
+  
 
     return (
         <motion.div className="w-full h-[100px] fixed flex flex-col items-center justify-center text-black bg-gray-700 bg-opacity-60 z-10" animate={isOpen ? "open" : "closed"}>
+          <div className="flex w-full justify-between">
+            <div className="px-10 text-center">
+              <h1 className="text-3xl">JLPT News Study</h1>
+              <h3>日本語能力試験のニューズ勉強</h3>
+            </div>
 
-          <a href="/login">Login</a>
-          <a href="/signup">Sign Up</a>
+            <div className="flex gap-5 items-center px-10">
+            <button className="bg-[#113946] text-white w-[100px] py-2 rounded" onClick={handleLogin}>Login</button>
+            <button className="bg-yellow-500 w-[100px] py-2 rounded" onClick={handleSignup}>Sign Up</button>
+            </div>
+          </div>
           {/* <motion.div className={`fixed top-0 left-0 right-0 bottom-0 w-[300px] z-50 bg-white shadow-2xl`}  variants={variants}> */}
             {/* Links */}
             {/* <motion.div className="absolute w-full h-full flex flex-col items-center justify-center gap-[20px] text-purple-400" variants={linkVariants}>
