@@ -15,7 +15,7 @@ const Login: React.FC = () => {
   const [inputValue, setInputValue] = useState(initialInputValue);
   const router = useRouter()
   const { email, password } = inputValue;
-  const { login, user } = useAuth();
+  const { login, user, accessToken } = useAuth();
   const { previousLocation } = useNavigation();
 
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -40,6 +40,14 @@ const Login: React.FC = () => {
       console.error("Login error oops: ", error.message);
     }
   };
+
+
+  useEffect(() => {
+    console.log("previous location: " + JSON.stringify(previousLocation))
+    if (accessToken && (!previousLocation || previousLocation === '/')) {
+      router.push('/dashboard');
+    }
+  }, [previousLocation, router]);
 
   return (
     <div className="flex flex-col h-screen w-screen items-center bg-[#FFF2D8]">
