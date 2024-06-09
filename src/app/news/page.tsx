@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { fetchNewsArticles } from '@/api/newsArticles';
 import KanjiInfo from '@/components/KanjiInfo';
+import Navbar from '@/components/Navbar';
 
 
 const News: React.FC = () => {
@@ -132,8 +133,9 @@ const News: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col items-center min-w-screen p-4">
-      <div className="flex justify-between bg-[#EAD7BB] rounded px-12 py-8 my-8">
+    <div className="flex flex-col items-center min-w-screen ">
+      <Navbar />
+      <div className="flex mt-44 justify-between bg-[#EAD7BB] rounded px-12 py-8 my-8">
         <button className={`bg-blue-300 rounded py-2 px-8  mx-3 ${selectedLevel === 5 ? "bg-blue-500 text-white " : "border-0"}`} style={selectedLevel === 5 ? { outline: '2px solid rgba(0, 0, 0, 0.75)' } : {}} onClick={() => handleLevelClick(5)}>5級</button>
 
         <button className={`py-2 px-8 rounded mx-3 ${selectedLevel === 4 ? "bg-green-600 text-white " : "bg-green-400 border-0"}`} style={selectedLevel === 4 ? { outline: '2px solid rgba(0, 0, 0, 0.75)' } : {}} onClick={() => handleLevelClick(4)}>4級</button>

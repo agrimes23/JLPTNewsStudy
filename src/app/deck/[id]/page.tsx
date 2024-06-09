@@ -5,6 +5,7 @@ import { useParams } from "next/navigation"
 import AddFlashcard from '@/components/AddFlashcard'
 import { useFlashcardDeck } from '@/context/FlashcardContext'
 import withAuth from '@/hoc/withAuth';
+import Navbar from '@/components/Navbar'
 
 // TODO: this is where user can create new flashcards, delete a flashcard, and edit flashcards (in edit mode)
 
@@ -73,8 +74,10 @@ const Deck = () => {
     <>
         {/* page container */}
         <div className="flex flex-col min-w-screen min-h-screen items-center bg-blue-100">
+
+          <Navbar />
             {/* Deck Info */}
-            <div className="my-28 max-w-[50%]">
+            <div className="mb-28 mt-52 max-w-[50%]">
                 <h2 className="text-[40px]">{deckInfo?.title}</h2>
                 <h4 className="text-[20px] mt-6">{deckInfo?.description}</h4>
                 <p>{deckInfo?.modifiedDate}</p>

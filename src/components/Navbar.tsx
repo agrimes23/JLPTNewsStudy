@@ -95,18 +95,20 @@ const Navbar = () => {
             <h1 className="text-3xl">JLPT News Study</h1>
             <h3>日本語能力試験のニューズ勉強</h3>
           </button>
+          <div className="flex gap-5 items-center px-10">
 
+            <button className="bg-[#FFF2D8] w-[100px] py-2 rounded" onClick={() => router.push("/news")}>News</button>
           {accessToken ? (
-            <div className="flex gap-5 items-center px-10">
+          
               <button
                 className="bg-[#BCA37F] px-8 py-2 rounded"
                 onClick={() => router.push("/dashboard")}
               >
                 Dashboard
               </button>
-            </div>
+            
           ) : (
-            <div className="flex gap-5 items-center px-10">
+            <>
               <button
                 className="bg-[#113946] text-white w-[100px] py-2 rounded"
                 onClick={handleLogin}
@@ -119,8 +121,9 @@ const Navbar = () => {
               >
                 Sign Up
               </button>
-            </div>
+              </>
           )}
+          </div>
         </div>
         {/* <motion.div className={`fixed top-0 left-0 right-0 bottom-0 w-[300px] z-50 bg-white shadow-2xl`}  variants={variants}> */}
         {/* Links */}

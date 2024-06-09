@@ -9,6 +9,7 @@ import EditDeck from "@/components/EditDeck";
 import { useRouter } from "next/navigation";
 import withAuth from '@/hoc/withAuth';
 import KanjiLevelBar from '@/components/KanjiLevelBar'
+import Navbar from "@/components/Navbar";
 
 interface DeckInfo {
   _id: any;
@@ -70,8 +71,9 @@ const Dashboard: React.FC = () => {
 
   return (
     <div className="flex flex-col min-w-screen min-h-screen items-center mb-20">
+      <Navbar />
       {/* Navbar on dash page */}
-      <div className="flex flex-col justify-center items-center w-[80%] h-[100px] my-20 ">
+      <div className="flex flex-col justify-center items-center w-[80%] h-[100px] mb-20 mt-52">
         <h1 className="text-[30px] h-full">
           Welcome, {user?.firstName}!
           <span className="text-[10px] bg-blue-300">settings</span>
