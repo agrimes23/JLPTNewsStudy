@@ -97,9 +97,9 @@ const NewDeck: React.FC<KanjiProps> = ({
   };
 
   return (
-    <div className="fixed top-0 left-0 w-screen h-screen bg-gray-300 bg-opacity-70 ">
+    <div className="z-30 fixed top-0 left-0 w-screen h-screen bg-gray-300 bg-opacity-70 ">
       <div className="flex items-center justify-center h-full">
-        <div className="flex flex-col w-[50vw] h-[600px] items-center justify-between bg-white rounded-lg">
+        <div className="flex flex-col w-[80vw] lg:w-[800px]  h-[600px] items-center justify-between bg-white rounded-lg">
           <button
             className="relative self-end px-5 py-3 text-2xl text-gray-600"
             onClick={() => {
@@ -113,26 +113,26 @@ const NewDeck: React.FC<KanjiProps> = ({
 
           <></>
           :
-          <div className="flex w-full justify-around">
-            <button
-              className={`border-2 border-yellow-400  ${
-                isNewDeck ? "" : "bg-yellow-400"
-              } py-3 w-[200px] rounded`}
+          <div className="flex flex-col sm:flex-row w-full justify-center items-center sm:justify-around">
+            <div
+              className={`cursor-pointer border-b-2 ${
+                isNewDeck ? 'border-transparent' : 'border-yellow-400 font-semibold'
+              } py-3 w-[200px] text-center`}
               onClick={() => setIsNewDeck(false)}
             >
-              Save to existing deck
-            </button>
-            <button
-              className={`border-2 border-green-400 ${
-                isNewDeck ? "bg-green-400" : ""
-              } py-3 w-[200px] rounded`}
+              Existing Deck
+            </div>
+            <div
+              className={`cursor-pointer mt-8 sm:mt-0 border-b-2 ${
+                isNewDeck ? 'border-green-400 font-semibold' : 'border-transparent'
+              } py-3 w-[200px] text-center`}
               onClick={() => setIsNewDeck(true)}
             >
-              Save to new deck
-            </button>
+              New Deck
+            </div>
           </div>
 }
-          <div className="flex w-full h-full mt-20 flex-col items-center">
+          <div className="flex w-full h-full mt-8 flex-col items-center">
             {/* choose which deck to save it to */}
             {isEditFlashcard ? (
               <NewsAddFlashcard
@@ -146,9 +146,9 @@ const NewDeck: React.FC<KanjiProps> = ({
               />
             ) :
             isNewDeck ? (
-              <form onSubmit={handleSubmit} className="flex flex-col w-80 h-full gap-8">
+              <form onSubmit={handleSubmit} className="flex flex-col w-[60vw] md:w-[350px] h-full gap-4 md:gap-8">
                 <div className="flex flex-col">
-                  <label className="text-[18px] w-[32]">title</label>
+                  <label className="text-[16px] md:text-[18px] w-[32]">title</label>
                   <input
                     className="border border-black py-1 pl-2 rounded mt-4"
                     type="text"
@@ -159,7 +159,7 @@ const NewDeck: React.FC<KanjiProps> = ({
                   />
                 </div>
                 <div className="flex flex-col">
-                  <label className="text-[18px] w-[32]">description</label>
+                  <label className="text-[16px] md:text-[18px] w-[32]">description</label>
                   <input
                     className="border border-black py-1 pl-2 rounded mt-4"
                     type="text"
@@ -170,14 +170,14 @@ const NewDeck: React.FC<KanjiProps> = ({
                   />
                 </div>
                 <div className="flex flex-col justify-center h-full">
-                  <button className="bg-blue-800 text-white py-2 rounded" type="submit">Create New Deck and Continue</button>
+                  <button className="bg-blue-800 text-white py-2 rounded" type="submit">Continue</button>
                 </div>
               </form>
             ) : (
               <div className="flex flex-col h-full my-5">
                 <label htmlFor="deckSelect">Select a deck</label>
                 <select
-                  className="border-2 border-gray w-[37vw]"
+                  className="border-2 border-gray w-[60vw] md:w-[400px]"
                   id="deckSelect"
                   value={selectedDeck}
                   onChange={(e) => setSelectedDeck(e.target.value)}
