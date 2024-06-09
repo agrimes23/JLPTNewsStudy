@@ -2,7 +2,6 @@
 import Navbar from '@/components/Navbar'
 import React, {useState} from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import Carousel from '@/components/Carousel'
 import ExplainHomePage from '@/components/ExplainHomePage'
 import Footer from '@/components/Footer'
 import { useRouter } from 'next/navigation'
