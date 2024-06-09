@@ -42,12 +42,12 @@ const AddFlashcard = () => {
       
         <div className="flex flex-row">
       <div className="flex flex-col">
-        <div className="flex w-[800px] mb-4">
+        <div className="flex w-[500px] mb-4">
           <h3 className="w-[50%] text-center text-gray-400">Front</h3>
           <h3 className="w-[50%] text-center text-gray-400">Back</h3>
         </div>
-        <div className="flex border-2 w-[800px] h-[350px] bg-white rounded-lg shadow-lg">
-          <div className="flex flex-col w-[50%] h-full items-center justify-center border-r-[1px]">
+        <div className="flex border-2 w-[500px] h-[250px] bg-white rounded-lg shadow-lg">
+          <div className="flex flex-col w-[80vw] md:w-[250px] h-full items-center justify-center border-r-[1px]">
           <textarea
               name="frontSide"
               value={frontSide}
