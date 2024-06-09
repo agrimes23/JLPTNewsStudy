@@ -60,7 +60,7 @@ const Signup: React.FC = () => {
             <Navbar/>
             <div className="flex flex-col justify-center items-center h-full w-full">
 
-            <form className="flex h-[500px] flex-col items-center bg-white w-[400px] rounded border-[1px] border-black shadow-xl" onSubmit={handleSubmit}>
+            <form className="flex flex-col items-center bg-white w-[80vw] md:w-[400px] mt-20 md:mt-0 rounded border-[1px] border-black shadow-xl" onSubmit={handleSubmit}>
 
                 <h2 className="text-2xl my-10">Sign Up</h2>
                     <div className="flex flex-col items-center justify-center gap-6">
@@ -103,7 +103,7 @@ const Signup: React.FC = () => {
                 <button className="flex justfy-center items-center bg-[#113946] w-[230px] justify-center py-2 rounded text-white" type="submit">Sign Up</button>
                 </div>
                 
-                <div className="flex items-center mt-10">
+                <div className="flex items-center my-10 flex-col md:flex-row">
                 <h4 className="font-input text-lightGray">Already have an account?</h4>
                 <a className="underline flex pl-2" href="/login">Login</a>
                 </div>

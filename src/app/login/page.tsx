@@ -55,7 +55,7 @@ const Login: React.FC = () => {
 
 
       <div className="flex flex-col justify-center items-center h-full w-full">
-        <form className="flex h-[500px] flex-col items-center bg-white w-[400px] gap-10 rounded border-[1px] border-black shadow-xl" onSubmit={handleSubmit}>
+        <form className="flex mt-20 md:mt-0 flex-col items-center bg-white w-[80vw] md:w-[400px] gap-10 rounded border-[1px] border-black shadow-xl" onSubmit={handleSubmit}>
         <h2 className="text-2xl my-10">Login</h2>
           <input
             className="py-2 pl-2 rounded border-2 border-gray"
@@ -74,7 +74,7 @@ const Login: React.FC = () => {
             placeholder="Password"
           />
           <button className="flex justfy-center items-center bg-[#113946] w-[230px] justify-center py-2 rounded text-white" type="submit">Login</button>
-          <div className="text-center font-input text-lightGray">
+          <div className="text-center font-input my-10 text-lightGray">
                 New to our app? <a className="underline" href="/signup">Sign up</a>
           </div>
         </form>
