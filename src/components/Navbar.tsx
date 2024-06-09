@@ -87,11 +87,11 @@ const Navbar = () => {
 
     return (
       <motion.div
-        className="w-full h-[100px] fixed flex flex-col items-center justify-center text-black bg-gray-700 bg-opacity-60 z-10"
+        className="w-full h-[100px] fixed flex flex-col items-center justify-center bg-gray-700 bg-opacity-80 z-10"
         animate={isOpen ? "open" : "closed"}
       >
         <div className="flex w-full justify-between">
-          <button onClick={() => router.push("/")} className="px-10 text-center">
+          <button onClick={() => router.push("/")} className="px-10 text-center text-white">
             <h1 className="text-3xl">JLPT News Study</h1>
             <h3>日本語能力試験のニューズ勉強</h3>
           </button>
