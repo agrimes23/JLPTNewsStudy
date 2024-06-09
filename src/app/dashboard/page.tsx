@@ -105,6 +105,7 @@ const Dashboard: React.FC = () => {
 
       {/* list of available decks */}
       <div className="flex flex-col w-[100%] h-[100%] items-center gap-14">
+        {isCreateDeck && <CreateDeck />}
         {/* Deck Info Card */}
         {userDecks.map((deckInfo: DeckInfo, index: number) => {
           if (editingDeckId === deckInfo._id) {
@@ -122,20 +123,20 @@ const Dashboard: React.FC = () => {
             return (
               <div
                 key={deckInfo._id}
-                className="flex w-[600px] py-8 border-[1px] rounded-lg border-gray-500 justify-between px-8 shadow-lg hover:bg-yellow-100 hover:border-black cursor-pointer"
+                className="flex flex-col sm:flex-row w-[80vw] sm:w-[600px] py-8 border-[1px] rounded-lg border-gray-500 justify-between px-8 shadow-lg hover:bg-yellow-100 hover:border-black cursor-pointer"
                 onClick={() => router.push(`/deck/${deckInfo._id}`)}
               >
-                <div className="flex flex-col gap-6 self-end w-[200px] ">
+                <div className="flex flex-col gap-6 self-end w-full text-center sm:text-start sm:w-[200px] ">
                   <h3 className="text-[22px] group-hover:underline">
                     {deckInfo.title}
                   </h3>
                   <p>{deckInfo.description}</p>
                 </div>
-                <div className="flex flex-col gap-6 self-end">
+                <div className="flex flex-col gap-6 self-center mt-5 sm:mt-0 sm:self-end">
                 <KanjiLevelBar deckId={deckInfo._id} />
                   <p className="self-end">{deckInfo.modifiedDate}</p>
                 </div>
-                <div className="flex flex-col gap-6 self-end">
+                <div className="flex flex-row sm:flex-col gap-6 mt-5 sm:mt-0 justify-around sm:justify-normal sm:self-end">
                   <button
                     onClick={(e) => {
                       e.stopPropagation(); // Prevent navigating to the deck when deleting
@@ -159,7 +160,7 @@ const Dashboard: React.FC = () => {
             );
           }
         })}
-        {isCreateDeck && <CreateDeck />}
+        
       </div>
     </div>
   );

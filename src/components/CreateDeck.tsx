@@ -13,7 +13,7 @@ const CreateDeck = () => {
   
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
-  
+
       try {
         const response = createDeck(deck);
         console.log("response from create deck:", response);
@@ -21,22 +21,41 @@ const CreateDeck = () => {
         console.error("Error creating deck:", error);
       }
     };
-    
-  return (
-    <div className="flex w-[600px] py-8 border-[1px] rounded-lg border-gray-500 bg-white justify-between px-8 shadow-lg">
-        <form onSubmit={handleSubmit} className="flex flex-col gap-2 self-end">
-        <label className="text-[18px] w-[32]">title</label>
-        <input type="text" name="title" value={deck.title} placeholder="deck title" onChange={handleChange} />
-        <label className="text-[18px] w-[32]">description</label>
-        <input type="text" name="description" value={deck.description} placeholder="deck description" onChange={handleChange} />
-        <button type="submit" className="self-center mt-4 p-2 bg-blue-500 text-white rounded">Create Deck</button>
-      </form>
-      <div className="flex flex-col gap-6 self-center w-full">
-        <p>-------jlpt kanji level bar-------</p>
-        <p className="self-center">current date</p>
+
+    return (
+      <div className="flex w-[80vw] sm:w-[600px] py-8 border-[1px] rounded-lg border-gray-500 bg-white justify-between px-8 shadow-lg">
+        <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row w-full">
+          <div className="flex flex-col self-end gap-2">
+          <label className="text-[18px] w-[32]">title</label>
+          <input
+            type="text"
+            name="title"
+            value={deck.title}
+            placeholder="deck title"
+            onChange={handleChange}
+            className="border border-gray-500 rounded pl-2 py-1"
+          />
+          <label className="text-[18px] w-[32]">description</label>
+          <input
+            type="text"
+            name="description"
+            value={deck.description}
+            placeholder="deck description"
+            onChange={handleChange}
+            className="border border-gray-500 rounded pl-2 py-1"
+          />
+        </div>
+          <div className="flex sm:flex-col mt-5 sm:mt-0 justify-center items-end w-full ">
+            <button
+              type="submit"
+              className="mt-4 p-2 w-[200px] bg-blue-500 text-white rounded"
+            >
+              Create Deck
+            </button>
+          </div>
+        </form>
       </div>
-    </div>
-  );
+    );
 };
 
 export default CreateDeck;
