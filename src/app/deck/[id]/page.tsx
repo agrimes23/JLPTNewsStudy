@@ -76,25 +76,27 @@ const Deck = () => {
       <div className="flex flex-col min-w-screen min-h-screen items-center bg-blue-100">
         <Navbar />
         {/* Deck Info */}
-        <div className="mb-28 mt-52 max-w-[50%]">
+        <div className="mb-20 mt-52 max-w-[50%]">
           <h2 className="text-[40px]">{deckInfo?.title}</h2>
           <h4 className="text-[20px] mt-6">{deckInfo?.description}</h4>
           <p>{deckInfo?.modifiedDate}</p>
         </div>
-        <button
-          onClick={() => setIsEditMode(!isEditMode)}
-          className="py-2 px-4 bg-yellow-600 text-white rounded"
-        >
-          {isEditMode ? "Cancel Edit" : "Edit Flashcards"}
-        </button>
-        {isEditMode && (
+        <div className="w-full flex items-center justify-center mb-20">
           <button
-            onClick={handleSaveFlashcards}
-            className="py-2 px-4 bg-green-600 text-white rounded ml-4"
+            onClick={() => setIsEditMode(!isEditMode)}
+            className={`  py-2 ${isEditMode ? "w-[120px] bg-transparent text-black border-2 border-red-700" : "w-[150px] bg-yellow-600 text-white"}  rounded`}
           >
-            Save All
+            {isEditMode ? "Cancel Edit" : "Edit Flashcards"}
           </button>
-        )}
+          {isEditMode && (
+            <button
+              onClick={handleSaveFlashcards}
+              className="py-2 w-[120px] bg-green-600 text-white rounded ml-4"
+            >
+              Save All
+            </button>
+          )}
+        </div>
         {/* Flascards container*/}
         <div className="flex flex-col w-full md:w-[900px] items-center gap-28 mb-32">
           {deckInfo?.flashcards?.map((flashcard: any, index: number) => {
@@ -104,7 +106,7 @@ const Deck = () => {
             return (
               <div key={index} className="flex flex-col md:flex-row w-full justify-center items-center bg-[#080b3a54] sm:bg-transparent">
                 <div className="flex flex-col">
-                  <div className="flex sm:w-[700px] mb-4">
+                  <div className="flex lg:w-[700px] md:w-[500px] mb-4">
                     <h3 className="w-[50%] hidden sm:flex text-center justify-center text-gray-400">Front</h3>
                     <h3 className="w-[50%] hidden sm:flex text-center justify-center text-gray-400">Back</h3>
                   </div>

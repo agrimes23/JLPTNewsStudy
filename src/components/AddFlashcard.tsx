@@ -37,12 +37,12 @@ const AddFlashcard = () => {
   };
 
   return (
-    <div className="flex w-full justify-center mr-20">
+    <div className="flex w-full justify-center md:mr-20">
       <form onSubmit={handleSubmit}>
       
         <div className="flex flex-col md:flex-row w-full justify-center items-center">
       <div className="flex flex-col">
-        <div className="flex sm:w-[700px] mb-4">
+        <div className="flex lg:w-[700px] mb-4">
           <h3 className="w-[50%] hidden sm:flex text-center justify-center text-gray-400">Front</h3>
           <h3 className="w-[50%] hidden sm:flex text-center justify-center text-gray-400">Back</h3>
         </div>
