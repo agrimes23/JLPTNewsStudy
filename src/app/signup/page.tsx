@@ -5,6 +5,8 @@ import { register } from '@/api/authentication';
 import { useAuth } from "@/context/AuthContext";
 import Navbar from "@/components/Navbar";
 import { useRouter } from "next/navigation";
+import { useNavigation } from '@/context/NavigationContext';
+
 
 
 const initialInputValue = {
@@ -15,16 +17,11 @@ const initialInputValue = {
   };
 
 const Signup: React.FC = () => {
-    const { user } = useAuth();
+    const { user, login, accessToken } = useAuth();
     const router = useRouter()
 
-    const [inputValue, setInputValue] = useState({
-        firstName: "",
-        lastName: "",
-        email: "",
-        password: "",
-        });
-
+    const [inputValue, setInputValue] = useState(initialInputValue);
+    const { previousLocation } = useNavigation();
     const { firstName, lastName, email, password } = inputValue;
 
     const handleOnChange = (e: any) => {
@@ -40,11 +37,11 @@ const Signup: React.FC = () => {
 
         try {
 
-            register(inputValue.firstName, inputValue.lastName, inputValue.email, inputValue.password)
-            .then(responseData => {
-                setInputValue(initialInputValue);
-            })
+            await register(inputValue.firstName, inputValue.lastName, inputValue.email, inputValue.password)
             setInputValue(initialInputValue)
+
+            await login(email, password);
+            router.push('/dashboard');
 
         } catch (error) {
             console.error("Registration error: " + error)
@@ -52,11 +49,11 @@ const Signup: React.FC = () => {
     }
 
     useEffect(() => {
-        if (user) {
+        console.log("previous location: " + JSON.stringify(previousLocation))
+        if (accessToken && (!previousLocation || previousLocation === '/')) {
           router.push('/dashboard');
         }
-      }, [user, router]);
-
+      }, [previousLocation, router]);
     return (
         
         <div className="flex flex-col h-screen w-screen items-center bg-[#FFF2D8]">
