@@ -4,7 +4,6 @@ import React, {useState} from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import Carousel from '@/components/Carousel'
 import ExplainHomePage from '@/components/ExplainHomePage'
-import ExplainAllKanji from '@/components/ExplainAllKanji'
 import Footer from '@/components/Footer'
 import { useRouter } from 'next/navigation'
 
