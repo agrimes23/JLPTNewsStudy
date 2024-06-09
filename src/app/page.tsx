@@ -40,12 +40,12 @@ const HomePage: React.FC = () => {
             <div className="flex flex-col justify-center items-center px-10">
                 {/* What news they can study */}
                 <div className="flex h-[100vh] max-w-[1200px] items-center justify-center">
-                    <ExplainHomePage imageUrl="https://images.pexels.com/photos/20705274/pexels-photo-20705274/free-photo-of-hand-holding-newspapers-in-darkness.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" englishText="Study the top headlines in Japan to prepare for the JLPT (Japanese Language Proficiency Test)" japaneseText="日本語能力試験 (JLPT) を準備のために日本のトップニュースを勉強する" orientation="md:flex-row" />
+                    <ExplainHomePage imageUrl="https://images.pexels.com/photos/20705274/pexels-photo-20705274/free-photo-of-hand-holding-newspapers-in-darkness.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" englishText="Study the top headlines in Japan to prepare for the JLPT (Japanese Language Proficiency Test)" japaneseText="日本語能力試験 (JLPT) を準備のために日本のトップニュースを勉強する" orientation="lg:flex-row" />
                 </div>
 
                 {/* Detects all levels of jlpt kanji */}
                 <div className="h-[100vh]">
-                    <ExplainHomePage imageUrl="https://images.pexels.com/photos/1498273/pexels-photo-1498273.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" englishText='Learn Kanji at your level and add ones you want to study to your own flashcard decks' japaneseText='自分のレベル合わせて漢字を学び、勉強したい漢字を自分のフラッシュカードのデッキを追加できる' orientation='md:flex-row-reverse'/>
+                    <ExplainHomePage imageUrl="https://images.pexels.com/photos/1498273/pexels-photo-1498273.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" englishText='Learn Kanji at your level and add ones you want to study to your own flashcard decks' japaneseText='自分のレベル合わせて漢字を学び、勉強したい漢字を自分のフラッシュカードのデッキを追加できる' orientation='lg:flex-row-reverse'/>
                 </div>
             </div>
         </div>

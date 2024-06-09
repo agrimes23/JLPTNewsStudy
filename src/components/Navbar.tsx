@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { useNavigation } from '@/context/NavigationContext';
 import { useAuth } from '@/context/AuthContext'
 
+
 const Navbar = () => {
 
     const [isOpen, setIsOpen] = useState(false)
@@ -12,67 +13,6 @@ const Navbar = () => {
     const { setPreviousLocation } = useNavigation();
     const { accessToken } = useAuth()
 
-
-    const variants = {
-        initial: {
-          clipPath: "circle(1220px at 50px 50px)",
-        },
-        open:{
-            clipPath: "circle(1220px at 50px 50px)",
-            transition: {
-                type: "spring",
-                stiffness: 20, 
-            }
-        },
-        closed: {
-            clipPath: "circle(30px at 50px 50px)",
-            transition: {
-                delay:0.5,
-                type:"spring",
-                stiffness: 400,
-                damping: 40,
-            }
-        }
-    }
-
-    const linkVariants = {
-      initial: {
-          opacity: 0
-      },
-      open: {
-          opacity: 1, // Add opacity property here
-          transition: {
-              staggerChildren: 0.2,
-              delayChildren: 0.3
-          }
-      },
-      closed: {
-          opacity: 0, // Add opacity property here
-          transition: {
-              staggerChildren: 0.05,
-              staggerDirection: -1
-          }
-      }
-}
-
-    const linkItemVariants = {
-        open: {
-            y: 0,
-            opacity: 1
-        },
-        closed: {
-            y: 50,
-            opacity: 0
-        }
-    }
-
-
-    const items = [
-        "Home",
-        "About",
-        "Login",
-        "Sign Up"
-    ]
 
     const handleLogin = () => {
       setPreviousLocation("/dashboard");
@@ -83,84 +23,86 @@ const Navbar = () => {
       setPreviousLocation("/dashboard");
       router.push('/signup');
     };
+    
+    const handleToggle= () => {
+        setIsOpen(!isOpen);
+    }
   
 
     return (
-      <motion.div
-        className="w-full h-[100px] fixed flex flex-col items-center justify-center bg-gray-700 bg-opacity-80 z-10"
-        animate={isOpen ? "open" : "closed"}
-      >
-        <div className="flex w-full justify-between">
-          <button onClick={() => router.push("/")} className="px-10 text-center text-white">
-            <h1 className="text-3xl">JLPT News Study</h1>
-            <h3>日本語能力試験のニューズ勉強</h3>
-          </button>
-          <div className="flex gap-5 items-center px-10">
-
-            <button className="bg-[#FFF2D8] w-[100px] py-2 rounded" onClick={() => router.push("/news")}>News</button>
-          {accessToken ? (
-          
+      <div className="w-screen h-[100px] fixed flex flex-col items-center justify-center bg-gray-700 bg-opacity-80 z-10">
+        <button
+          onClick={() => router.push("/")}
+          className="absolute flex flex-col px-10 items-center text-center text-white"
+        >
+          <h1 className="text-3xl">JLPT News Study</h1>
+          <h3>日本語能力試験のニューズ勉強</h3>
+        </button>
+        <div className="flex w-full items-center">
+          <div className="gap-5 hidden lg:flex items-center px-10">
+            <button
+              className="bg-[#FFF2D8] w-[100px] py-2 rounded"
+              onClick={() => router.push("/news")}
+            >
+              News
+            </button>
+            {accessToken ? (
               <button
                 className="bg-[#BCA37F] px-8 py-2 rounded"
                 onClick={() => router.push("/dashboard")}
               >
                 Dashboard
               </button>
-            
-          ) : (
-            <>
-              <button
-                className="bg-[#113946] text-white w-[100px] py-2 rounded"
-                onClick={handleLogin}
-              >
-                Login
-              </button>
-              <button
-                className="bg-yellow-500 w-[100px] py-2 rounded"
-                onClick={handleSignup}
-              >
-                Sign Up
-              </button>
+            ) : (
+              <>
+                <button
+                  className="bg-[#113946] text-white w-[100px] py-2 rounded"
+                  onClick={handleLogin}
+                >
+                  Login
+                </button>
+                <button
+                  className="bg-yellow-500 w-[100px] py-2 rounded"
+                  onClick={handleSignup}
+                >
+                  Sign Up
+                </button>
               </>
-          )}
+            )}
+          </div>
+
+          <div
+            className="z-20 flex lg:hidden flex-col cursor-pointer px-5"
+            onClick={handleToggle}
+          >
+            <div
+              className={`w-9 h-1 bg-white my-0.5 transition-transform duration-400 ${
+                isOpen ? "transform translate-y-2.5 rotate-[-45deg]" : ""
+              }`}
+            ></div>
+            <div
+              className={`w-9 h-1 bg-white my-1 transition-opacity duration-400 ${
+                isOpen ? "opacity-0" : ""
+              }`}
+            ></div>
+            <div
+              className={`w-9 h-1 bg-white my-0.5 transition-transform duration-400 ${
+                isOpen ? "transform -translate-y-2.5 rotate-[45deg]" : ""
+              }`}
+            ></div>
           </div>
         </div>
-        {/* <motion.div className={`fixed top-0 left-0 right-0 bottom-0 w-[300px] z-50 bg-white shadow-2xl`}  variants={variants}> */}
-        {/* Links */}
-        {/* <motion.div className="absolute w-full h-full flex flex-col items-center justify-center gap-[20px] text-purple-400" variants={linkVariants}>
-              {items.map((item) => (
-                <motion.a href={`#${item}`} key={item} variants={linkItemVariants} whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
-                  {item}
-                </motion.a>
-              ))}
-            </motion.div> */}
-
-        {/* Toggle Button */}
-        {/* <button className="w-[50px] h-[50px] rounded fixed top-[25px] left-[25px] bg-transparent border-none cursor-pointer flex items-center justify-center z-50" onClick={() => setIsOpen(!isOpen)}>
-              <svg width="23" height="23" viewBox="0 0 23 23">
-                <motion.path
-                  strokeWidth="3"
-                  stroke="black"
-                  strokeLinecap="round"
-                  variants={{ closed: { d: "M 2 2.5 L 20 2.5" }, open: { d: "M 3 16.5 L 17 2.5"} }}
-                />
-                <motion.path
-                  strokeWidth="3"
-                  stroke="black"
-                  strokeLinecap="round"
-                  d="M 2 9.423 L 20 9.423"
-                  variants={{ closed: { opacity: 1 }, open: { opacity: 0 }}}
-                />
-                <motion.path
-                  strokeWidth="3"
-                  stroke="black"
-                  strokeLinecap="round"
-                  variants={{ closed: { d: "M 2 16.346 L 20 16.346" }, open: { d: "M 3 2.5 L 17 16.346"} }}
-                />
-              </svg>
-            </button> */}
-        {/* </motion.div> */}
-      </motion.div>
+        {/* mobile nav open menu */}
+        {isOpen ? 
+        <div className="fixed flex flex-col justify-center items-center text-lg gap-5 z-10 top-0 left-0 bottom-0 bg-gray-700 w-[250px] sm:w-[400px] text-white ">
+          <a className="hover:underline" href="/news">news</a>
+          <a  className="hover:underline" href="/login">login</a>
+        </div>
+        
+          :
+          <></>
+      }
+      </div>
     );
 }
 
