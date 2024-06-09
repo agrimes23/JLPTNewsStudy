@@ -104,15 +104,15 @@ const Deck = () => {
             return (
               <div key={index} className="flex flex-col md:flex-row w-full justify-center items-center bg-[#080b3a54] sm:bg-transparent">
                 <div className="flex flex-col">
-                  <div className="flex sm:w-[500px] mb-4">
+                  <div className="flex sm:w-[700px] mb-4">
                     <h3 className="w-[50%] hidden sm:flex text-center justify-center text-gray-400">Front</h3>
                     <h3 className="w-[50%] hidden sm:flex text-center justify-center text-gray-400">Back</h3>
                   </div>
 
                   {/* flashcards */}
-                  <div className="flex flex-col sm:flex-row sm:border-2 w-[80vw] lg:w-[700px] sm:w-[500px] h-[350px] lg:h-[350px] justify-center items-center sm:h-[250px] rounded-lg sm:shadow-lg">
+                  <div className="flex flex-col sm:flex-row sm:border-2 w-[80vw] lg:w-[700px] sm:w-[500px] h-[500px] lg:h-[350px] justify-center items-center sm:h-[250px] rounded-lg sm:shadow-lg">
                   <h3 className="w-[80vw] flex sm:hidden text-center justify-center text-black">Front</h3>
-                    <div className="flex w-[80vw] lg:w-[350px] md:w-[250px] h-full items-center justify-center border-[1px] sm:border-none sm:border-r-[1px]  bg-white">
+                    <div className="flex w-[80vw] lg:w-[350px] md:w-[250px] h-full items-center justify-center border-[1px] sm:border-none sm:border-r-[1px] bg-white">
                       {isEditMode ? (
                         <input
                           type="text"
@@ -151,9 +151,9 @@ const Deck = () => {
                     </div>
                   </div>
                 </div>
-                <div className="flex ml-10 justify-center gap-10">
+                <div className="flex sm:ml-10 justify-center gap-10">
                   <button
-                    className="text-red-600"
+                    className="sm:text-red-600 sm:bg-transparent sm:w-fit w-[100px] text-black bg-red-600 my-5 sm:my-0 rounded px-2 py-2"
                     onClick={() => handleDeleteFlashcard(flashcard._id)}
                   >
                     Del

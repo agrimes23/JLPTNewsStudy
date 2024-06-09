@@ -37,44 +37,42 @@ const AddFlashcard = () => {
   };
 
   return (
-    <div className="flex w-full justify-center">
+    <div className="flex w-full justify-center mr-20">
       <form onSubmit={handleSubmit}>
       
-        <div className="flex flex-row">
+        <div className="flex flex-col md:flex-row w-full justify-center items-center">
       <div className="flex flex-col">
-        <div className="flex w-[500px] mb-4">
-          <h3 className="w-[50%] text-center text-gray-400">Front</h3>
-          <h3 className="w-[50%] text-center text-gray-400">Back</h3>
+        <div className="flex sm:w-[700px] mb-4">
+          <h3 className="w-[50%] hidden sm:flex text-center justify-center text-gray-400">Front</h3>
+          <h3 className="w-[50%] hidden sm:flex text-center justify-center text-gray-400">Back</h3>
         </div>
-        <div className="flex border-2 w-[500px] h-[250px] bg-white rounded-lg shadow-lg">
-          <div className="flex flex-col w-[80vw] md:w-[250px] h-full items-center justify-center border-r-[1px]">
+        <div className="flex flex-col sm:flex-row sm:border-2 w-[80vw] lg:w-[700px] sm:w-[500px] h-[500px] lg:h-[350px] justify-center items-center sm:h-[250px] rounded-lg sm:shadow-lg">
+          <h3 className="w-[80vw] flex sm:hidden text-center justify-center text-black">Front</h3>
+          <div className="flex flex-col w-[80vw] lg:w-[350px] md:w-[250px] items-center justify-center border-[1px] sm:border-none sm:border-r-[1px] bg-white h-full">
           <textarea
               name="frontSide"
               value={frontSide}
               placeholder="front side"
-              className="rounded p-2 h-32 w-72 resize-none text-center"
+              className="rounded p-2 w-full resize-none text-center"
               maxLength={50}
               onChange={(e) => setFrontSide(e.target.value)}
               required
             />
-            <input type="text" placeholder="JLPT Level (eg N1, N2, N3, N4, N5)" value={jlptLevel} className="w-72 py-2 pl-2 mt-5" onChange={(e) => setJlptLevel(e.target.value)} required/>
+            <input type="text" placeholder="JLPT Level (eg N1, N2, N3, N4, N5)" value={jlptLevel} className="w-full py-2 pl-2 mt-5" onChange={(e) => setJlptLevel(e.target.value)} required/>
           </div>
-          
-          <div className="flex w-[50%] h-full items-center justify-center border-l-[1px]">
+          <h3 className="mt-5 w-[80vw] flex sm:hidden text-center justify-center text-black">Back</h3>
+          <div className="flex w-[80vw] lg:w-[350px] md:w-[250px] h-full items-center justify-center border-t-[1px] sm:border-l-[1px] sm:border-t-none bg-white">
             <label htmlFor=""></label>
             <textarea
               name="backSide"
               value={backSide}
               placeholder="back side"
-              className="rounded p-2 h-32 w-72 resize-none text-center"
+              className="rounded p-2 w-full resize-none text-center"
               maxLength={100}
               onChange={(e) => setBackSide(e.target.value)}
             />
           </div>
         </div>
-      </div>
-      <div className="flex flex-col ml-8 justify-center gap-10">
-        <button className="text-red-600">Del</button>
       </div>
       </div>
       <div className="w-full flex justify-center mt-10">
