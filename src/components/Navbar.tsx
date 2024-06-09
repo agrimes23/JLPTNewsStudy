@@ -76,18 +76,18 @@ const Navbar = () => {
             onClick={handleToggle}
           >
             <div
-              className={`w-9 h-1 bg-white my-0.5 transition-transform duration-400 ${
-                isOpen ? "transform translate-y-2.5 rotate-[-45deg]" : ""
+              className={`w-9 h-[2px] bg-white my-0.5 transition-transform duration-400 ${
+                isOpen ? "transform translate-y-2 rotate-[-45deg]" : ""
               }`}
             ></div>
             <div
-              className={`w-9 h-1 bg-white my-1 transition-opacity duration-400 ${
+              className={`w-9 h-[2px] bg-white my-1 transition-opacity duration-400 ${
                 isOpen ? "opacity-0" : ""
               }`}
             ></div>
             <div
-              className={`w-9 h-1 bg-white my-0.5 transition-transform duration-400 ${
-                isOpen ? "transform -translate-y-2.5 rotate-[45deg]" : ""
+              className={`w-9 h-[2px] bg-white my-0.5 transition-transform duration-400 ${
+                isOpen ? "transform -translate-y-2 rotate-[45deg]" : ""
               }`}
             ></div>
           </div>
