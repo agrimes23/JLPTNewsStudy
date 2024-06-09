@@ -135,7 +135,7 @@ const News: React.FC = () => {
   return (
     <div className="flex flex-col items-center min-w-screen ">
       <Navbar />
-      <div className="flex mt-44 justify-between bg-[#EAD7BB] rounded px-12 py-8 my-8">
+      <div className="flex flex-col md:flex-row mt-32 md:mt-44 justify-between bg-[#EAD7BB] gap-5 md:gap-0 rounded w-[200px] md:w-[680px] md:px-12 py-8 my-8">
         <button className={`bg-blue-300 rounded py-2 px-8  mx-3 ${selectedLevel === 5 ? "bg-blue-500 text-white " : "border-0"}`} style={selectedLevel === 5 ? { outline: '2px solid rgba(0, 0, 0, 0.75)' } : {}} onClick={() => handleLevelClick(5)}>5級</button>
 
         <button className={`py-2 px-8 rounded mx-3 ${selectedLevel === 4 ? "bg-green-600 text-white " : "bg-green-400 border-0"}`} style={selectedLevel === 4 ? { outline: '2px solid rgba(0, 0, 0, 0.75)' } : {}} onClick={() => handleLevelClick(4)}>4級</button>
@@ -147,7 +147,7 @@ const News: React.FC = () => {
         <button className={`py-2 px-8 rounded mx-3 ${selectedLevel === 1 ? "bg-red-500 text-black " : "bg-red-400 border-0"}`} style={selectedLevel === 1 ? { outline: '2px solid rgba(0, 0, 0, 0.75)' } : {}} onClick={() => handleLevelClick(1)}>1級</button>
       </div>
       {articles.map((article, index) => (
-        <div key={index} className="my-8 w-[600px]">
+        <div key={index} className="my-8 w-[80vw] md:w-[600px]">
           <h2 className="text-xl font-bold">
             {highlightKanji(article.title, article.matchedKanji)}
           </h2>
