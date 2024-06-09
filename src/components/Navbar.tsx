@@ -96,7 +96,8 @@ const Navbar = () => {
         {isOpen ? 
         <div className="fixed flex flex-col justify-center items-center text-lg gap-5 z-10 top-0 left-0 bottom-0 bg-gray-700 w-[250px] sm:w-[400px] text-white ">
           <a className="hover:underline" href="/news">news</a>
-          <a  className="hover:underline" href="/login">login</a>
+          {accessToken ? <a className="hover:underline" href="/dashboard">dashboard</a> : <a className="hover:underline" href="/login">login</a> }
+          
         </div>
         
           :
