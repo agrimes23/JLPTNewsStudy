@@ -1,8 +1,6 @@
 // flashcard http routes
 import axios from 'axios'
 
-
-
 interface Flashcard {
   _id: string,
   frontSide: string,
@@ -20,7 +18,7 @@ interface DeckData {
 
 
 export const getUserDecks = async (id: string, accessToken:any) => {
-    const response = await axios.get(`http://localhost:8080/deck/user/${id}`, {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/deck/user/${id}`, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
     },
@@ -35,7 +33,7 @@ export const getUserDecks = async (id: string, accessToken:any) => {
 export const getDeckData = async (deckId: string, token: any): Promise<DeckData> => {
   try {
 
-    const response = await axios.get(`http://localhost:8080/deck/${deckId}`,  {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/deck/${deckId}`,  {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -53,7 +51,7 @@ export const getDeckData = async (deckId: string, token: any): Promise<DeckData>
 export const deleteDeck = async (deckId: string, token: any) => {
     try {
 
-        const response = await axios.delete(`http://localhost:8080/deck/${deckId}`, {
+        const response = await axios.delete(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/deck/${deckId}`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
@@ -67,7 +65,7 @@ export const deleteDeck = async (deckId: string, token: any) => {
 
 export const createDeckApi = async (userId: string, token: any, newDeck: any) => {
   try {
-    const response = await axios.post(`http://localhost:8080/deck/${userId}`, newDeck, {
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/deck/${userId}`, newDeck, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -81,7 +79,7 @@ export const createDeckApi = async (userId: string, token: any, newDeck: any) =>
 
 export const editDeckInfoApi = async (deckId: string, token: any, updatedDeckInfo: any) => {
   try {
-    const response = await axios.put(`http://localhost:8080/deck/${deckId}`, updatedDeckInfo, {
+    const response = await axios.put(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/deck/${deckId}`, updatedDeckInfo, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -96,7 +94,7 @@ export const editDeckInfoApi = async (deckId: string, token: any, updatedDeckInf
 
 export const createFlashCardApi = async (deckId: string, token: any, newFlashcard: any) => {
   try {
-    const response = await axios.post(`http://localhost:8080/deck/${deckId}/flashcards`, newFlashcard, {
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/deck/${deckId}/flashcards`, newFlashcard, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -112,7 +110,7 @@ export const createFlashCardApi = async (deckId: string, token: any, newFlashcar
 export const deleteFlashcardApi = async (deckId: string, flashcardId: string, token: any) => {
 
   try {
-    const response = await axios.delete(`http://localhost:8080/deck/${deckId}/flashcards/${flashcardId}`, {
+    const response = await axios.delete(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/deck/${deckId}/flashcards/${flashcardId}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -127,7 +125,7 @@ export const deleteFlashcardApi = async (deckId: string, flashcardId: string, to
 export const editFlashcardApi = async (deckId: string, flashcardId: string, updatedFlashcard: Partial<Flashcard>, token: any) => {
   try {
     const response = await axios.put(
-      `http://localhost:8080/deck/${deckId}/flashcards/${flashcardId}`,
+      `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/deck/${deckId}/flashcards/${flashcardId}`,
       updatedFlashcard,
       {
         headers: {

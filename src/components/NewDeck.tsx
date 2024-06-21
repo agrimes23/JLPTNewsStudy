@@ -70,8 +70,6 @@ const NewDeck: React.FC<KanjiProps> = ({
   };
 
   useEffect(() => {
-    console.log("jlpt level: " + JSON.stringify(jlptLevel));
-    console.log("decks: " + JSON.stringify(deckList));
     fetchDeckList();
   }, [user, accessToken]);
 
@@ -88,7 +86,6 @@ const NewDeck: React.FC<KanjiProps> = ({
     try {
       const response: any = await createDeck(deck);
       fetchDeckList()
-      console.log("response from create deck:", response);
       setSelectedDeck(response._id); // set the new deck ID as selected
       setIsEditFlashcard(true);
     } catch (error) {

@@ -1,7 +1,8 @@
 import React, {useState} from "react";
 import { useFlashcardDeck } from "@/context/FlashcardContext";
 
-const CreateDeck = () => {
+
+const CreateDeck = ({setIsCreateDeck, fetchData}: any) => {
 
     const { createDeck } = useFlashcardDeck();
     const [deck, setDeck] = useState<any>({ title: "", description: "" });
@@ -11,12 +12,14 @@ const CreateDeck = () => {
       setDeck((prevDeck: any) => ({ ...prevDeck, [name]: value }));
     };
   
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
 
       try {
-        const response = createDeck(deck);
-        console.log("response from create deck:", response);
+        await createDeck(deck);
+        setDeck({ title: "", description: "" })
+        setIsCreateDeck(false)
+        await fetchData();
       } catch (error) {
         console.error("Error creating deck:", error);
       }

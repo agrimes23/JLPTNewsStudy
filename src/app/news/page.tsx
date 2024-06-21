@@ -14,7 +14,6 @@ const News: React.FC = () => {
   const storageKey = 'newsArticles';
   const modalRef = useRef<HTMLDivElement>(null);
 
-
   useEffect(() => {
     const fetchData = async () => {
       const storedData = localStorage.getItem(storageKey);
@@ -61,7 +60,6 @@ const News: React.FC = () => {
   };
 
   const handleKanjiClick = (kanjiItem: any, event: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
-    console.log("kanji item: " + JSON.stringify(kanjiItem))
     setSelectedKanji(kanjiItem);
     const rect = event.currentTarget.getBoundingClientRect();
     const scrollOffset = window.scrollY;
@@ -107,7 +105,6 @@ const News: React.FC = () => {
 
   useEffect(() => {
     window.addEventListener('scroll', handleScroll);
-    console.log("hello")
     return () => window.removeEventListener('scroll', handleScroll);
 
   }, [selectedKanji, modalPosition]);

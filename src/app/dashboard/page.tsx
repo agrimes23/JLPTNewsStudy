@@ -105,7 +105,7 @@ const Dashboard: React.FC = () => {
 
       {/* list of available decks */}
       <div className="flex flex-col w-[100%] h-[100%] items-center gap-14">
-        {isCreateDeck && <CreateDeck />}
+        {isCreateDeck && <CreateDeck setIsCreateDeck={setIsCreateDeck} fetchData={fetchData} />}
         {/* Deck Info Card */}
         {userDecks.map((deckInfo: DeckInfo, index: number) => {
           if (editingDeckId === deckInfo._id) {

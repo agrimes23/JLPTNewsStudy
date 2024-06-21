@@ -53,7 +53,6 @@ const FlashcardDeckProvider = ({ children }: { children: ReactNode }) => {
 
     if (user && accessToken) {
       const response: any = await createDeckApi(user._id, accessToken, deck)
-      console.log("response from create deck: " + JSON.stringify(response))
       return response
     }
 
@@ -65,8 +64,6 @@ const FlashcardDeckProvider = ({ children }: { children: ReactNode }) => {
     );
 
     const response: any = await editDeckInfoApi(deckId, accessToken, updatedDeck)
-    console.log("Edit deck info repsonse: " + JSON.stringify(response))
-
   };
 
   const deleteDeck = (deckId: string) => {
@@ -75,15 +72,12 @@ const FlashcardDeckProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const createFlashcard = async (deckId: string, flashcard: Flashcard) => {
-    console.log('selected deck id: ' + JSON.stringify(deckId))
-    console.log('flashcard: ' + JSON.stringify(flashcard))
     setDecks(prevDecks =>
       prevDecks.map(deck =>
         deck._id === deckId ? { ...deck, flashcards: [...deck.flashcards, flashcard] } : deck
       )
     );
-    const response = await createFlashCardApi(deckId, accessToken, flashcard)
-    console.log("resopnse in flashcard context; " + JSON.stringify(response))
+    await createFlashCardApi(deckId, accessToken, flashcard)
   };
 
   const editFlashcard = async (deckId: string, flashcardId: string, updatedFlashcard: Partial<Flashcard>) => {
@@ -107,7 +101,6 @@ const FlashcardDeckProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const deleteFlashcard = async (deckId: string, flashcardId: string) => {
-    console.log("deck Id: " + JSON.stringify(deckId))
     try {
       await deleteFlashcardApi(deckId, flashcardId, accessToken); // Assuming accessToken is available in your context
       setDecks(prevDecks =>
@@ -126,8 +119,6 @@ const FlashcardDeckProvider = ({ children }: { children: ReactNode }) => {
     try {
       const decksList = await getUserDecks(userId, accessToken);
       setDecks(decksList)
-      // console.log("ahh decks: " + JSON.stringify(decks))
-      // console.log("ahh decksList: " + JSON.stringify(decksList))
 
       return decksList
     } catch (error) {

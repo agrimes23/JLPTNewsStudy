@@ -36,7 +36,6 @@ const NewsAddFlashcard: React.FC<KanjiProps> = ({
           alert("Please select a deck");
           return;
         }
-        console.log("jlpt level in news add flashcard: " + JSON.stringify(jlptLevel))
     
         const flashcard = {
           frontSide,
@@ -49,7 +48,6 @@ const NewsAddFlashcard: React.FC<KanjiProps> = ({
           flashcards: [flashcard],
         };
     
-        console.log("selectedDeck from news add flashcard component: " + JSON.stringify(selectedDeck))
         try {
           await createFlashcard(selectedDeck, requestBody);
           setFrontSide("");
@@ -60,10 +58,6 @@ const NewsAddFlashcard: React.FC<KanjiProps> = ({
           console.error("Error creating flashcard:", error);
         }
       };
-
-      useEffect(() => {
-        console.log("selected deck: " + JSON.stringify(selectedDeck))
-      }, [])
 
 
   return (

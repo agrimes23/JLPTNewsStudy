@@ -17,8 +17,6 @@ type UserContextType = {
   setUserInfo: any;
   userInfo: UserInfo | null;
   getUser: any;
-  updateUser: (updatedInfo: Partial<UserInfo>) => Promise<void>;
-  deleteUser: () => Promise<void>;
 };
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -46,34 +44,11 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   }, [accessToken]);
 
-  const updateUser = async (updatedInfo: Partial<UserInfo>) => {
-    try {
-      if (accessToken) {
-        const response = await axios.put<UserInfo>(
-          `http://localhost:8080/users/${userInfo?._id}`,
-          updatedInfo
-        );
-
-        setUserInfo({ ...userInfo, ...response.data }); // Merge updated data with existing userInfo
-      }
-    } catch (error) {
-      console.error("Failed to update user info:", error);
-    }
-  };
-
-  const deleteUser = async () => {
-    try {
-      await axios.delete("http://localhost:8080/user");
-
-      setUserInfo(null);
-    } catch (error) {
-      console.error("Failed to delete user:", error);
-    }
-  };
+ 
 
   return (
     <UserContext.Provider
-      value={{ getUser, setUserInfo, userInfo, updateUser, deleteUser }}
+      value={{ getUser, setUserInfo, userInfo }}
     >
       {children}
     </UserContext.Provider>

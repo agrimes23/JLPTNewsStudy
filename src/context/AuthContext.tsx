@@ -7,6 +7,10 @@ import React, {
   useEffect,
 } from "react";
 import axios from "axios";
+import { register as apiRegister } from '@/api/authentication'; 
+import { login as apiLogin } from '@/api/authentication'; 
+import { getRefreshToken } from "@/api/authentication";
+import { logout as apiLogout } from '@/api/authentication'
 import { getUserInfo } from "@/api/userApi";
 
 // Define the shape of the user data and context state
@@ -42,17 +46,10 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const refreshAccessToken = async () => {
     try {
-      // Make a request to the backend to refresh the access token
-      const response = await axios.get("http://localhost:8080/auth/refresh", {
-        withCredentials: true,
-      });
-      // Extract the new access token from the response
-      const { accessToken } = response.data;
-
-      // Update the access token in state
+      const response = await getRefreshToken()
+      const {accessToken} = response.data;
       setAccessToken(accessToken);
 
-      // Proceed with fetching user information
       if (accessToken) {
         const userRes: any = await getUserInfo(accessToken);
         setUser(userRes);
@@ -86,13 +83,9 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const login = async (email: string, password: string) => {
     try {
-      const response = await axios.post(
-        "http://localhost:8080/auth/login",
-        { email, password },
-        { withCredentials: true }
-      );
+      const response = await apiLogin(email, password)
 
-      const { accessToken, user } = response.data;
+      const { accessToken, user } = response;
       setAccessToken(accessToken);
       setUser(user);
     } catch (error) {
@@ -103,12 +96,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
   const logout = () => {
     setUser(null);
     setAccessToken(null);
-    // Optionally, you can also clear the refresh token cookie by making an API call to the logout endpoint.
-    axios.post(
-      "http://localhost:8080/auth/logout",
-      {},
-      { withCredentials: true }
-    );
+    apiLogout()
   };
 
   const register = async (
@@ -117,12 +105,8 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     email: string,
     password: string
   ) => {
-    const response = await axios.post(
-      "http://localhost:8080/auth/register",
-      { firstName, lastName, email, password },
-      { withCredentials: true }
-    );
-    const { accessToken, user } = response.data;
+    const response = await apiRegister(firstName, lastName, email, password)
+    const { accessToken, user } = response;
     setAccessToken(accessToken);
     setUser(user);
   };

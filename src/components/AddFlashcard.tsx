@@ -14,7 +14,6 @@ const AddFlashcard = () => {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    console.log("jlpt level??:  " + JSON.stringify(jlptLevel))
     const flashcard = {
       frontSide,
       backSide,
